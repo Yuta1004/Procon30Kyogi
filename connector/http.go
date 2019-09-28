@@ -1,6 +1,7 @@
 package connector
 
 import (
+	"bytes"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -23,4 +24,18 @@ func httpGet(url string) []byte {
 		return make([]byte, 0)
 	}
 	return resBody
+}
+
+func httpPostJSON(url string, data string) bool {
+	// setting request
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer([]byte(data)))
+	req.Header.Set("Content-Type", "application/json")
+
+	// http post
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Could not send data : %s\n", err)
+	}
+	return resp.StatusCode == 200
 }
