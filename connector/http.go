@@ -31,10 +31,11 @@ func httpGet(url string, token string) []byte {
 	return resBody
 }
 
-func httpPostJSON(url string, data string) bool {
+func httpPostJSON(url string, token string, data string) bool {
 	// setting request
 	req, _ := http.NewRequest("POST", url, bytes.NewBuffer([]byte(data)))
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", token)
 
 	// http post
 	client := &http.Client{}
