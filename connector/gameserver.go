@@ -62,13 +62,30 @@ func GetAllBattle(token string) *[]BattleInfo {
 	reqURL := config.GameServer.URL + "/matches"
 	resBody := httpGet(reqURL, token)
 
-	// json unmarshall
+	// json unmarshal
 	var battleInfo []BattleInfo
 	if err := json.Unmarshal(resBody, &battleInfo); err != nil {
 		fmt.Fprintf(os.Stderr, "Could not finished process of unmarshal : %s", err)
 		return nil
 	}
 	return &battleInfo
+}
+
+// GetBattleDetail : 試合情報詳細を取得する
+func GetBattleDetail(battleID int, token string) *[]BattleDetailInfo {
+	// get data
+	config := config.GetConfigData()
+	battleIDStr := strconv.Itoa(battleID)
+	reqURL := config.GameServer.URL + "/matches/" + battleIDStr
+	resBody := httpGet(reqURL, token)
+
+	// json unmarshal
+	var battleDetailInfo []BattleDetailInfo
+	if err := json.Unmarshal(resBody, &battleDetailInfo); err != nil {
+		fmt.Fprintf(os.Stderr, "Could not finished process of unmarshal : %s", err)
+		return nil
+	}
+	return &battleDetailInfo
 }
 
 // PostActionData : 行動情報を送信する
