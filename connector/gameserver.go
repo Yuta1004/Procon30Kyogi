@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/Yuta1004/procon30-kyogi/config"
 	"os"
+	"strconv"
 )
 
 // BattleInfo : ゲームサーバから受信した試合情報を扱う
@@ -31,4 +32,13 @@ func GetAllBattle(token string) *[]BattleInfo {
 		return nil
 	}
 	return &battleInfo
+}
+
+// PostActionData : 行動情報を送信する
+func PostActionData(battleID int, token string, actionData string) bool {
+	// post data
+	config := config.GetConfigData()
+	battleIDStr := strconv.Itoa(battleID)
+	reqURL := config.GameServer.URL + "/matches/" + battleIDStr + "/action"
+	return httpPostJSON(reqURL, token, actionData)
 }
