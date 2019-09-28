@@ -18,6 +18,43 @@ type BattleInfo struct {
 	MatchTo        string `json:"matchTo"`
 }
 
+// BattleDetailInfo : ゲームサーバから受信した試合情報詳細を扱う
+type BattleDetailInfo struct {
+	Width             int      `json:"width"`
+	Height            int      `json:"height"`
+	Turn              int      `json:"turn"`
+	StartedAtUnixTime int      `json:"startedAtUnixTime"`
+	Points            [][]int  `json:"points"`
+	Tiled             [][]int  `json:"tiled"`
+	Actions           []Action `json:"actions"`
+	Teams             []Team   `json:"teams"`
+}
+
+// Action : 行動情報を扱う
+type Action struct {
+	AgentID int    `json:"agentID"`
+	Dx      int    `json:"dx"`
+	Dy      int    `json:"dy"`
+	Type    string `json:"type"`
+	Apply   int    `json:"apply"`
+	Turn    int    `json:"turn"`
+}
+
+// Team : チーム情報を扱う
+type Team struct {
+	TeamID    int     `json:"teamID"`
+	Agents    []Agent `json:"agents"`
+	AreaPoint int     `json:"areaPoint"`
+	TilePoint int     `json:"tilePoint"`
+}
+
+// Agent : エージェント情報を扱う
+type Agent struct {
+	AgentID int `json:"agentID"`
+	X       int `json:"x"`
+	Y       int `json:"Y"`
+}
+
 // GetAllBattle : 自チームが参加している全ての試合情報を取得する
 func GetAllBattle(token string) *[]BattleInfo {
 	// get data
