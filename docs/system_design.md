@@ -33,6 +33,8 @@
 ## CUI
 
 - コマンド受付
+- システム起動時に呼ばれる
+- チャネルを生成し、BattleManagerをgoroutineで起動する
 
 ## BattleManager
 
@@ -52,6 +54,7 @@ type Battle struct {
     TurnMillis      int
     IntervalMillis  int
     Turn            int
+    MaxTurn         int
     MatchTo         string
     SolverCh        chan string
 }
