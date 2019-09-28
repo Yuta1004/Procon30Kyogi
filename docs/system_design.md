@@ -54,3 +54,10 @@ type Battle struct {
     SolverCh        chan string
 }
 ```
+
+## SolverManager
+
+- BattleManagerにgoroutineで呼ばれる
+- 試合状況を判断し、適切なリソース割り当てを行う (優先度低)
+- Solver実行終了後はチャネルを通してBattleManagerへ結果を返す
+- Solver実行時間の管理も行う
