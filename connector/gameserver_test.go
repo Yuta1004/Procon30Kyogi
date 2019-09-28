@@ -5,7 +5,7 @@ import (
 )
 
 func TestGetAllBattle(t *testing.T) {
-	battleInfo := GetAllBattle()
+	battleInfo := GetAllBattle("A")
 	if battleInfo == nil {
 		t.Fail()
 	}

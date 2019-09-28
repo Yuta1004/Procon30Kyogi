@@ -18,11 +18,11 @@ type BattleInfo struct {
 }
 
 // GetAllBattle : 自チームが参加している全ての試合情報を取得する
-func GetAllBattle() *[]BattleInfo {
+func GetAllBattle(token string) *[]BattleInfo {
 	// get data
 	config := config.GetConfigData()
 	reqURL := config.GameServer.URL + "/matches"
-	resBody := httpGet(reqURL)
+	resBody := httpGet(reqURL, token)
 
 	// json unmarshall
 	var battleInfo []BattleInfo
