@@ -8,9 +8,14 @@ import (
 	"os"
 )
 
-func httpGet(url string) []byte {
+func httpGet(url string, token string) []byte {
+	// setting request
+	req, _ := http.NewRequest("GET", url, bytes.NewBuffer([]byte("")))
+	req.Header.Set("Authorization", token)
+
 	// http get
-	res, err := http.Get(url)
+	client := &http.Client{}
+	res, err := client.Do(req)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Could not get data from server : %s [%s]\n", err, url)
 		return make([]byte, 0)
