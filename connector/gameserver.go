@@ -9,12 +9,12 @@ import (
 
 // BattleInfo : ゲームサーバから受信した試合情報を扱う
 type BattleInfo struct {
-	ID             int `json:"id"`
-	TeamID         int `json:"teamID"`
-	TurnMillis     int `json:"turnMillis"`
-	IntervalMillis int `json:"intervalMillis"`
-	MaxTurn        int `json:"turns"`
-	MatchTo        int `json:"matchTo"`
+	ID             int    `json:"id"`
+	TeamID         int    `json:"teamID"`
+	TurnMillis     int    `json:"turnMillis"`
+	IntervalMillis int    `json:"intervalMillis"`
+	MaxTurn        int    `json:"turns"`
+	MatchTo        string `json:"matchTo"`
 }
 
 // GetAllBattle : 自チームが参加している全ての試合情報を取得する
