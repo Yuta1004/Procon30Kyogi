@@ -41,19 +41,23 @@ func ExecSolver(ch chan string, battle battle.Battle) {
 	image := conf.Solver.Image
 
 	// config(container)
-	battleID := strconv.Itoa(battle.Info.ID)
-	maxTurn := strconv.Itoa(battle.Info.MaxTurn)
-	execTimeLim := strconv.Itoa(int(float64(battle.Info.TurnMillis) * 0.7))
-	jsonInPath := "/tmp/input.json"
-	jsonOutPath := "/tmp/output.json"
-	memLim := "999999999"
+	battleID := battle.Info.ID
+	maxTurn := battle.Info.MaxTurn
+	jsonIn := "/tmp/input.json"
+	jsonOut := "/tmp/output.json"
+	memLim := 999999999
+	execTimeLim := int(float64(battle.Info.TurnMillis) * 0.7)
 	confCont := container.Config{
 		Image: image,
 		Cmd: []string{
-			"./solver.py", jsonInPath, jsonOutPath, battleID, "A", "B", maxTurn, execTimeLim, memLim, ";",
-			"cat", "/tmp/output.json",
+			"/bin/sh", "-c",
+			fmt.Sprintf(
+				"./solver.py %s %s %d %s %s %d %d %d && cat %s",
+				jsonIn, jsonOut, battleID, "A", "B", maxTurn, execTimeLim, memLim, jsonOut,
+			),
 		},
 		WorkingDir: "/tmp/",
+		Tty:        true,
 	}
 
 	// config(host)
@@ -63,29 +67,22 @@ func ExecSolver(ch chan string, battle battle.Battle) {
 			{
 				Type:   mount.TypeBind,
 				Source: rootPath + "/tmp/" + jsonFName + ".json",
-				Target: "/usr/input.json",
+				Target: "/tmp/input.json",
 			},
 		},
 	}
 
 	// create
 	ctx := context.Background()
-	_, err = client.ContainerCreate(ctx, &confCont, &confHost, &network.NetworkingConfig{}, "Procon30_"+jsonFName)
+	cont, err := client.ContainerCreate(ctx, &confCont, &confHost, &network.NetworkingConfig{}, "Procon30_"+jsonFName)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Could not create container : %s\n", err)
 		ch <- "Error"
 		return
 	}
 
-	// exec -> attach
-	client.ContainerStart(ctx, "Procon30_"+jsonFName, types.ContainerStartOptions{})
-	attach, err := client.ContainerAttach(ctx, "Procon30_"+jsonFName, types.ContainerAttachOptions{Stdout: true})
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Could not attach to container : %s\n", err)
-		ch <- "Error"
-		return
-	}
-	_ = attach
+	// exec -> attach -> remove
+	client.ContainerStart(ctx, cont.ID, types.ContainerStartOptions{})
 	ch <- "Success"
 	return
 }
