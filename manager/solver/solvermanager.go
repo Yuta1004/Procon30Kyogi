@@ -49,7 +49,10 @@ func ExecSolver(ch chan string, battle battle.Battle) {
 	memLim := "999999999"
 	confCont := container.Config{
 		Image: image,
-		Cmd:   []string{"./solver.py", jsonInPath, jsonOutPath, battleID, "A", "B", maxTurn, execTimeLim, memLim},
+		Cmd: []string{
+			"./solver.py", jsonInPath, jsonOutPath, battleID, "A", "B", maxTurn, execTimeLim, memLim, ";",
+			"cat", "/usr/output.json",
+		},
 	}
 
 	// config(host)
