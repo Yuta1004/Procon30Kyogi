@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/Yuta1004/procon30-kyogi/manager/battle"
+	"github.com/docker/docker/client"
 	"os"
 )
 
@@ -17,4 +18,13 @@ func ExecSolver(ch chan string, battle battle.Battle) {
 		return
 	}
 	_ = jsonStr
+
+	// crate client
+	client, err := client.NewClientWithOpts(client.FromEnv)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Could not create docker clinet : %s\n", err)
+		ch <- "Error"
+		return
+	}
+	_ = client
 }
