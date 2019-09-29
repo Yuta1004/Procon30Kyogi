@@ -44,15 +44,16 @@ func ExecSolver(ch chan string, battle battle.Battle) {
 	battleID := strconv.Itoa(battle.Info.ID)
 	maxTurn := strconv.Itoa(battle.Info.MaxTurn)
 	execTimeLim := strconv.Itoa(int(float64(battle.Info.TurnMillis) * 0.7))
-	jsonInPath := "/usr/input.json"
-	jsonOutPath := "/usr/output.json"
+	jsonInPath := "/tmp/input.json"
+	jsonOutPath := "/tmp/output.json"
 	memLim := "999999999"
 	confCont := container.Config{
 		Image: image,
 		Cmd: []string{
 			"./solver.py", jsonInPath, jsonOutPath, battleID, "A", "B", maxTurn, execTimeLim, memLim, ";",
-			"cat", "/usr/output.json",
+			"cat", "/tmp/output.json",
 		},
+		WorkingDir: "/tmp/",
 	}
 
 	// config(host)
@@ -77,7 +78,7 @@ func ExecSolver(ch chan string, battle battle.Battle) {
 	}
 
 	// exec -> attach
-	client.ContainerStart(ctx, "Procon30"+jsonFName, types.ContainerStartOptions{})
+	client.ContainerStart(ctx, "Procon30_"+jsonFName, types.ContainerStartOptions{})
 	attach, err := client.ContainerAttach(ctx, "Procon30_"+jsonFName, types.ContainerAttachOptions{Stdout: true})
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Could not attach to container : %s\n", err)
