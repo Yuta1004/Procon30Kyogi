@@ -8,7 +8,7 @@
 |       CUI       |          |  BattleManager  |          |  ServerConnector   |
 |                 | <----->  |                 | <----->  |                    |
 |    コマンド受付   |          |     試合管理     |          | ゲームサーバと通信する |
-+-----------------+          +-----------------+          +-------------------+
++-----------------+          +-----------------+          +--------------------+
                                       ^
                                       |
                                       v
@@ -48,14 +48,10 @@
 ```go
 var battleList []battleList
 
+// Battle : 試合情報を扱う
 type Battle struct {
-    ID              int
-    TeamID          int
-    TurnMillis      int
-    IntervalMillis  int
+    Info            BattleInfo
     Turn            int
-    MaxTurn         int
-    MatchTo         string
     SolverCh        chan string
 }
 ```
@@ -71,4 +67,52 @@ type Battle struct {
 
 - ゲームサーバと通信する
 - ゲームデータ受信, 行動情報送信を行う
-- 通信に失敗した場合自動で再送信を行う
+
+```go
+// BattleInfo : ゲームサーバから受信した試合情報を扱う
+type BattleInfo struct {
+	ID             int
+	TeamID         int
+	TurnMillis     int
+	IntervalMillis int
+	MaxTurn        int
+	MatchTo        string
+}
+
+// BattleDetailInfo : ゲームサーバから受信した試合情報詳細を扱う
+type BattleDetailInfo struct {
+	Width             int
+	Height            int
+	Turn              int
+	StartedAtUnixTime int
+	Points            [][]int
+	Tiled             [][]int
+	Actions           []Action
+	Teams             []Team
+}
+
+// Action : 行動情報を扱う
+type Action struct {
+	AgentID int
+	Dx      int
+	Dy      int
+	Type    string
+	Apply   int
+	Turn    int
+}
+
+// Team : チーム情報を扱う
+type Team struct {
+	TeamID    int
+	Agents    []Agent
+	AreaPoint int
+	TilePoint int
+}
+
+// Agent : エージェント情報を扱う
+type Agent struct {
+	AgentID int
+	X       int
+	Y       int
+}
+```
