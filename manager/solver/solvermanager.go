@@ -28,6 +28,7 @@ func ExecSolver(ch chan string, battle battle.Battle) {
 	image := conf.Solver.Image
 
 	// config(container)
+	/* TODO : 適切なメモリ量割り当て */
 	battleID := battle.Info.ID
 	maxTurn := battle.Info.MaxTurn
 	jsonIn := "/tmp/input.json"
