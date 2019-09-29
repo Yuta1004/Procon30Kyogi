@@ -5,7 +5,7 @@ import (
 )
 
 func TestSaveJSON(t *testing.T) {
-	result := SaveJSON("Test", []byte("{\"test\": \"test\"}"))
+	result := saveJSON("Test", []byte("{\"test\": \"test\"}"))
 	if !result {
 		t.Fail()
 	}

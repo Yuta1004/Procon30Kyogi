@@ -10,8 +10,7 @@ var (
 	rootPath = path.Join(os.Getenv("GOPATH"), "src/github.com/Yuta1004/procon30-kyogi")
 )
 
-// SaveJSON : ソルバに渡すJSONファイルをローカルに保存する
-func SaveJSON(name string, jsonBody []byte) bool {
+func saveJSON(name string, jsonBody []byte) bool {
 	// mkdir
 	_ = os.Mkdir(rootPath+"/tmp", 0744)
 
