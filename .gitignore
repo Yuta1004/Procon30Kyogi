@@ -1,2 +1,4 @@
 config.toml
-Test.json
+solver.py
+
+tmp/
