@@ -17,7 +17,7 @@ func httpGet(url string, token string) []byte {
 	client := &http.Client{}
 	res, err := client.Do(req)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Could not get data from server : %s [%s]\n", err, url)
+		fmt.Fprintf(os.Stderr, "%s, %s\n", url, err)
 		return make([]byte, 0)
 	}
 	defer res.Body.Close()
@@ -25,7 +25,7 @@ func httpGet(url string, token string) []byte {
 	// read data
 	resBody, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Could not read data from server : %s\n", err)
+		fmt.Fprintf(os.Stderr, "%s\n", err)
 		return make([]byte, 0)
 	}
 	return resBody
@@ -41,7 +41,7 @@ func httpPostJSON(url string, token string, data string) bool {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Could not send data : %s\n", err)
+		fmt.Fprintf(os.Stderr, "%s\n", err)
 	}
 	return resp.StatusCode == 200
 }
