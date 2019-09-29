@@ -21,8 +21,10 @@ func TestExecSolver(t *testing.T) {
 		Actions:           []connector.Action{action},
 		Teams:             []connector.Team{team},
 	}
+	battleInfo := connector.BattleInfo{ID: 1, TeamID: 1, TurnMillis: 30000, IntervalMillis: 3000, MaxTurn: 60, MatchTo: "test"}
 
 	// test
 	ch := make(chan string, 1)
-	ExecSolver(ch, battle.Battle{DetailInfo: &battleDetail})
+	go ExecSolver(ch, battle.Battle{Info: &battleInfo, DetailInfo: &battleDetail, Turn: 1})
+	<-ch
 }
