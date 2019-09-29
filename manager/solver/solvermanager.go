@@ -6,6 +6,7 @@ import (
 	"github.com/Yuta1004/procon30-kyogi/config"
 	"github.com/Yuta1004/procon30-kyogi/manager/battle"
 	"github.com/docker/docker/api/types/container"
+	"github.com/docker/docker/api/types/mount"
 	"github.com/docker/docker/client"
 	"os"
 	"strconv"
@@ -48,4 +49,17 @@ func ExecSolver(ch chan string, battle battle.Battle) {
 		Cmd:   []string{"./solver.py", jsonInPath, jsonOutPath, battleID, "A", "B", maxTurn, execTimeLim, memLim},
 	}
 	_ = confCont
+
+	// config(host)
+	confHost := container.HostConfig{
+		AutoRemove: true,
+		Mounts: []mount.Mount{
+			{
+				Type:   mount.TypeBind,
+				Source: rootPath + "/" + jsonFName + ".json",
+				Target: "/usr/input.json",
+			},
+		},
+	}
+	_ = confHost
 }
