@@ -17,7 +17,7 @@ RUN     echo "[Info] Start Build..." && \
                 gfortran \
                 openblas-dev && \
         echo "[Info] Insall Python libaries..." && \
-        pip install --upgrade pip && \
+        pip3 install --upgrade pip && \
         pip3 install numpy && \
         echo "[INFO] Setup solver.py" && \
         cd /tmp && \
