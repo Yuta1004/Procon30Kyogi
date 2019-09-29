@@ -65,7 +65,7 @@ func GetAllBattle(token string) *[]BattleInfo {
 	// json unmarshal
 	var battleInfo []BattleInfo
 	if err := json.Unmarshal(resBody, &battleInfo); err != nil {
-		fmt.Fprintf(os.Stderr, "Could not finished process of unmarshal : %s\n", err)
+		fmt.Fprintf(os.Stderr, "%s\n", err)
 		return nil
 	}
 	return &battleInfo
@@ -82,7 +82,7 @@ func GetBattleDetail(battleID int, token string) *[]BattleDetailInfo {
 	// json unmarshal
 	var battleDetailInfo []BattleDetailInfo
 	if err := json.Unmarshal(resBody, &battleDetailInfo); err != nil {
-		fmt.Fprintf(os.Stderr, "Could not finished process of unmarshal : %s\n", err)
+		fmt.Fprintf(os.Stderr, "%s\n", err)
 		return nil
 	}
 	return &battleDetailInfo

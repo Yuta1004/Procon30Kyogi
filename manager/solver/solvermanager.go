@@ -21,7 +21,7 @@ func ExecSolver(ch chan string, battle battle.Battle) {
 	jsonFName := strconv.Itoa(battle.Info.ID) + "_" + strconv.Itoa(battle.Turn)
 	jsonStr, err := json.Marshal(battle.DetailInfo)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Could not convert to json from \"battle\" : %s\n", err)
+		fmt.Fprintf(os.Stderr, "%s\n", err)
 		ch <- "Error"
 		return
 	}
@@ -30,11 +30,10 @@ func ExecSolver(ch chan string, battle battle.Battle) {
 	// crate client
 	client, err := client.NewClientWithOpts(client.WithVersion("1.40"))
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Could not create docker clinet : %s\n", err)
+		fmt.Fprintf(os.Stderr, "%s\n", err)
 		ch <- "Error"
 		return
 	}
-	_ = client
 
 	// config
 	conf := config.GetConfigData()
@@ -76,7 +75,7 @@ func ExecSolver(ch chan string, battle battle.Battle) {
 	ctx := context.Background()
 	cont, err := client.ContainerCreate(ctx, &confCont, &confHost, &network.NetworkingConfig{}, "Procon30_"+jsonFName)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Could not create container : %s\n", err)
+		fmt.Fprintf(os.Stderr, "%s\n", err)
 		ch <- "Error"
 		return
 	}

@@ -17,7 +17,7 @@ func saveJSON(name string, jsonBody []byte) bool {
 	// save json
 	file, err := os.Create(rootPath + "/tmp/" + name + ".json")
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Could not create file : %s", err)
+		fmt.Fprintf(os.Stderr, "%s\n", err)
 		return false
 	}
 	file.Write(jsonBody)
