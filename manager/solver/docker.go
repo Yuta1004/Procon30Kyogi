@@ -16,7 +16,7 @@ func callContainer(confCont *container.Config, confHost *container.HostConfig, n
 	client, err := client.NewClientWithOpts(client.WithVersion("1.40"))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", err)
-		return "Error"
+		return "{}"
 	}
 
 	// create
@@ -24,14 +24,14 @@ func callContainer(confCont *container.Config, confHost *container.HostConfig, n
 	cont, err := client.ContainerCreate(ctx, confCont, confHost, &network.NetworkingConfig{}, name)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", err)
-		return "Error"
+		return "{}"
 	}
 
 	// start
 	err = client.ContainerStart(ctx, cont.ID, types.ContainerStartOptions{})
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", err)
-		return "Error"
+		return "{}"
 	}
 	defer client.ContainerRemove(ctx, cont.ID, types.ContainerRemoveOptions{})
 
@@ -40,7 +40,7 @@ func callContainer(confCont *container.Config, confHost *container.HostConfig, n
 	select {
 	case err := <-errCh:
 		fmt.Fprintf(os.Stderr, "%s\n", err)
-		return "Error"
+		return "{}"
 	case <-statusCh:
 	}
 
@@ -48,7 +48,7 @@ func callContainer(confCont *container.Config, confHost *container.HostConfig, n
 	out, err := client.ContainerLogs(ctx, cont.ID, types.ContainerLogsOptions{ShowStdout: true})
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", err)
-		return "Error"
+		return "{}"
 	}
 	result, _ := ioutil.ReadAll(out)
 	return string(result)
