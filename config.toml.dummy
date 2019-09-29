@@ -1,2 +1,6 @@
 [GAMESERVER]
-url = ""
+url = "server url"
+
+[SOLVER]
+image = "docker image"
+pypath = "path to solver.py (base: project root)"
