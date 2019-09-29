@@ -36,15 +36,15 @@ func ExecSolver(ch chan string, battle battle.Battle) {
 	image := conf.Solver.Image
 
 	// config(container)
-	battleIDStr := strconv.Itoa(battle.Info.ID)
-	maxTurnStr := strconv.Itoa(battle.Info.MaxTurn)
+	battleID := strconv.Itoa(battle.Info.ID)
+	maxTurn := strconv.Itoa(battle.Info.MaxTurn)
+	execTimeLim := strconv.Itoa(int(float64(battle.Info.TurnMillis) * 0.7))
 	jsonInPath := "/usr/input.json"
 	jsonOutPath := "/usr/output.json"
-	execTimeLim := "50000" // ms
-	memLim := "100000"     // kb
+	memLim := "100000" // kb
 	confCont := container.Config{
 		Image: image,
-		Cmd:   []string{"./solver.py", jsonInPath, jsonOutPath, battleIDStr, "A", "B", maxTurnStr, execTimeLim, memLim},
+		Cmd:   []string{"./solver.py", jsonInPath, jsonOutPath, battleID, "A", "B", maxTurn, execTimeLim, memLim},
 	}
 	_ = confCont
 }
