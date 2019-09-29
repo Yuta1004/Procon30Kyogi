@@ -34,7 +34,6 @@ func ExecSolver(ch chan string, battle battle.Battle) {
 	// config
 	conf := config.GetConfigData()
 	image := conf.Solver.Image
-	solverPath := conf.Solver.PyPath
 
 	// config(container)
 	battleIDStr := strconv.Itoa(battle.Info.ID)
@@ -45,7 +44,7 @@ func ExecSolver(ch chan string, battle battle.Battle) {
 	memLim := "100000"     // kb
 	confCont := container.Config{
 		Image: image,
-		Cmd:   []string{"./" + solverPath, jsonInPath, jsonOutPath, battleIDStr, "A", "B", maxTurnStr, execTimeLim, memLim},
+		Cmd:   []string{"./solver.py", jsonInPath, jsonOutPath, battleIDStr, "A", "B", maxTurnStr, execTimeLim, memLim},
 	}
 	_ = confCont
 }
