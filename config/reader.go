@@ -21,6 +21,12 @@ type GameServer struct {
 	URL string
 }
 
+// Solver : 設定情報(Solver)を扱う構造体
+type Solver struct {
+	Image  string
+	PyPath string
+}
+
 // GetConfigData : 設定情報を返す
 func GetConfigData() *Config {
 	if config.GameServer.URL == "" {
