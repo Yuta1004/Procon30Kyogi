@@ -6,7 +6,7 @@ import (
 
 func TestGetConfigData(t *testing.T) {
 	config := GetConfigData()
-	if config == nil && config.GameServer.URL != "" {
+	if config == nil && config.GameServer.URL != "" && config.Solver.Image != "" {
 		t.Errorf("Cannot read config.toml")
 	}
 }
