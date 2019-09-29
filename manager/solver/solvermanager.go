@@ -1,16 +1,12 @@
 package solver
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"github.com/Yuta1004/procon30-kyogi/config"
 	"github.com/Yuta1004/procon30-kyogi/manager/battle"
-	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/mount"
-	"github.com/docker/docker/api/types/network"
-	"github.com/docker/docker/client"
 	"os"
 	"strconv"
 )
@@ -26,14 +22,6 @@ func ExecSolver(ch chan string, battle battle.Battle) {
 		return
 	}
 	saveJSON(jsonFName, jsonStr)
-
-	// crate client
-	client, err := client.NewClientWithOpts(client.WithVersion("1.40"))
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s\n", err)
-		ch <- "Error"
-		return
-	}
 
 	// config
 	conf := config.GetConfigData()
@@ -61,7 +49,6 @@ func ExecSolver(ch chan string, battle battle.Battle) {
 
 	// config(host)
 	confHost := container.HostConfig{
-		AutoRemove: true,
 		Mounts: []mount.Mount{
 			{
 				Type:   mount.TypeBind,
@@ -71,17 +58,6 @@ func ExecSolver(ch chan string, battle battle.Battle) {
 		},
 	}
 
-	// create
-	ctx := context.Background()
-	cont, err := client.ContainerCreate(ctx, &confCont, &confHost, &network.NetworkingConfig{}, "Procon30_"+jsonFName)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s\n", err)
-		ch <- "Error"
-		return
-	}
-
-	// exec -> attach -> remove
-	client.ContainerStart(ctx, cont.ID, types.ContainerStartOptions{})
-	ch <- "Success"
+	ch <- callContainer(&confCont, &confHost, "Procon30_"+jsonFName)
 	return
 }
