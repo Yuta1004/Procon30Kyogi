@@ -34,14 +34,14 @@ func ExecSolver(ch chan string, battle battle.Battle) {
 	jsonIn := "/tmp/input.json"
 	jsonOut := "/tmp/output.json"
 	memLim := 999999999
-	execTimeLim := int(float64(battle.Info.TurnMillis) * 0.7)
+	execTimeLim := int(float64(battle.Info.TurnMillis) * 0.0006)
 	confCont := container.Config{
 		Image: image,
 		Cmd: []string{
 			"/bin/sh", "-c",
 			fmt.Sprintf(
-				"./solver.py %s %s %d %s %s %d %d %d && cat %s",
-				jsonIn, jsonOut, battleID, "A", "B", maxTurn, execTimeLim, memLim, jsonOut,
+				"echo \"{}\" > /tmp/output.json && timeout -s %d ./solver.py %s %s %d %s %s %d %d %d && cat %s",
+				execTimeLim, jsonIn, jsonOut, battleID, "A", "B", maxTurn, execTimeLim*1000, memLim, jsonOut,
 			),
 		},
 		WorkingDir: "/tmp/",
