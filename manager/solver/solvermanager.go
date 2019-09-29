@@ -1,12 +1,15 @@
 package solver
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"github.com/Yuta1004/procon30-kyogi/config"
 	"github.com/Yuta1004/procon30-kyogi/manager/battle"
+	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/mount"
+	"github.com/docker/docker/api/types/network"
 	"github.com/docker/docker/client"
 	"os"
 	"strconv"
@@ -15,7 +18,7 @@ import (
 // ExecSolver : ソルバを起動, 実行する
 func ExecSolver(ch chan string, battle battle.Battle) {
 	// setting json
-	jsonFName := strconv.Itoa(battle.Info.ID) + strconv.Itoa(battle.Turn)
+	jsonFName := strconv.Itoa(battle.Info.ID) + "_" + strconv.Itoa(battle.Turn)
 	jsonStr, err := json.Marshal(battle.DetailInfo)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Could not convert to json from \"battle\" : %s\n", err)
@@ -48,7 +51,6 @@ func ExecSolver(ch chan string, battle battle.Battle) {
 		Image: image,
 		Cmd:   []string{"./solver.py", jsonInPath, jsonOutPath, battleID, "A", "B", maxTurn, execTimeLim, memLim},
 	}
-	_ = confCont
 
 	// config(host)
 	confHost := container.HostConfig{
@@ -61,5 +63,23 @@ func ExecSolver(ch chan string, battle battle.Battle) {
 			},
 		},
 	}
-	_ = confHost
+
+	// create
+	ctx := context.Background()
+	_, err = client.ContainerCreate(ctx, &confCont, &confHost, &network.NetworkingConfig{}, "Procon30"+jsonFName)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Could not create container : %s\n", err)
+		ch <- "Error"
+		return
+	}
+
+	// exec -> attach
+	client.ContainerStart(ctx, "Procon30"+jsonFName, types.ContainerStartOptions{})
+	attach, err := client.ContainerAttach(ctx, "Procon30"+jsonFName, types.ContainerAttachOptions{Stdout: true})
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Could not attach to container : %s\n", err)
+		ch <- "Error"
+		return
+	}
+	_ = attach
 }
