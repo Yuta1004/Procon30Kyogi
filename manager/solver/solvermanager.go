@@ -28,7 +28,7 @@ func ExecSolver(ch chan string, battle battle.Battle) {
 	saveJSON(jsonFName, jsonStr)
 
 	// crate client
-	client, err := client.NewClientWithOpts(client.FromEnv)
+	client, err := client.NewClientWithOpts(client.WithVersion("1.40"))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Could not create docker clinet : %s\n", err)
 		ch <- "Error"
@@ -61,7 +61,7 @@ func ExecSolver(ch chan string, battle battle.Battle) {
 		Mounts: []mount.Mount{
 			{
 				Type:   mount.TypeBind,
-				Source: rootPath + "/" + jsonFName + ".json",
+				Source: rootPath + "/tmp/" + jsonFName + ".json",
 				Target: "/usr/input.json",
 			},
 		},
@@ -69,7 +69,7 @@ func ExecSolver(ch chan string, battle battle.Battle) {
 
 	// create
 	ctx := context.Background()
-	_, err = client.ContainerCreate(ctx, &confCont, &confHost, &network.NetworkingConfig{}, "Procon30"+jsonFName)
+	_, err = client.ContainerCreate(ctx, &confCont, &confHost, &network.NetworkingConfig{}, "Procon30_"+jsonFName)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Could not create container : %s\n", err)
 		ch <- "Error"
@@ -78,11 +78,13 @@ func ExecSolver(ch chan string, battle battle.Battle) {
 
 	// exec -> attach
 	client.ContainerStart(ctx, "Procon30"+jsonFName, types.ContainerStartOptions{})
-	attach, err := client.ContainerAttach(ctx, "Procon30"+jsonFName, types.ContainerAttachOptions{Stdout: true})
+	attach, err := client.ContainerAttach(ctx, "Procon30_"+jsonFName, types.ContainerAttachOptions{Stdout: true})
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Could not attach to container : %s\n", err)
 		ch <- "Error"
 		return
 	}
 	_ = attach
+	ch <- "Success"
+	return
 }
