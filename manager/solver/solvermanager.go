@@ -14,13 +14,14 @@ import (
 // ExecSolver : ソルバを起動, 実行する
 func ExecSolver(ch chan string, battle battle.Battle) {
 	// setting json
+	jsonFName := strconv.Itoa(battle.Info.ID) + strconv.Itoa(battle.Turn)
 	jsonStr, err := json.Marshal(battle.DetailInfo)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Could not convert to json from \"battle\" : %s\n", err)
 		ch <- "Error"
 		return
 	}
-	_ = jsonStr
+	saveJSON(jsonFName, jsonStr)
 
 	// crate client
 	client, err := client.NewClientWithOpts(client.FromEnv)
