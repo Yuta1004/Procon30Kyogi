@@ -72,7 +72,7 @@ func GetAllBattle(token string) *[]BattleInfo {
 }
 
 // GetBattleDetail : 試合情報詳細を取得する
-func GetBattleDetail(battleID int, token string) *[]BattleDetailInfo {
+func GetBattleDetail(battleID int, token string) *BattleDetailInfo {
 	// get data
 	config := config.GetConfigData()
 	battleIDStr := strconv.Itoa(battleID)
@@ -80,7 +80,7 @@ func GetBattleDetail(battleID int, token string) *[]BattleDetailInfo {
 	resBody := httpGet(reqURL, token)
 
 	// json unmarshal
-	var battleDetailInfo []BattleDetailInfo
+	var battleDetailInfo BattleDetailInfo
 	if err := json.Unmarshal(resBody, &battleDetailInfo); err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", err)
 		return nil
