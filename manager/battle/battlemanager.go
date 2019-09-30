@@ -2,18 +2,11 @@ package battle
 
 import (
 	"github.com/Yuta1004/procon30-kyogi/connector"
+	"github.com/Yuta1004/procon30-kyogi/manager"
 	"time"
 )
 
-// Battle : 試合情報を扱う
-type Battle struct {
-	Info       *connector.BattleInfo
-	DetailInfo *connector.BattleDetailInfo
-	Turn       int
-	SolverCh   chan string
-}
-
-var allBattleDict map[int]Battle
+var allBattleDict map[int]manager.Battle
 
 // BManagerExec : 名前の通り, 参加している試合全ての管理をする
 func BManagerExec(token string) {
@@ -60,9 +53,9 @@ func makeAllBattleDict(token string) {
 	}
 }
 
-func newBattle(token string, battleID int) Battle {
+func newBattle(token string, battleID int) manager.Battle {
 	battleDetailInfo := connector.GetBattleDetail(battleID, token)
-	return Battle{
+	return manager.Battle{
 		DetailInfo: battleDetailInfo,
 		Turn:       battleDetailInfo.Turn,
 		SolverCh:   make(chan string, 10),

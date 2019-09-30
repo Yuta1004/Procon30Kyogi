@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/Yuta1004/procon30-kyogi/config"
-	"github.com/Yuta1004/procon30-kyogi/manager/battle"
+	"github.com/Yuta1004/procon30-kyogi/manager"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/mount"
 	"os"
@@ -12,7 +12,7 @@ import (
 )
 
 // ExecSolver : ソルバを起動, 実行する
-func ExecSolver(ch chan string, battle battle.Battle) {
+func ExecSolver(ch chan string, battle manager.Battle) {
 	// setting json
 	jsonFName := strconv.Itoa(battle.Info.ID) + "_" + strconv.Itoa(battle.Turn)
 	jsonStr, err := json.Marshal(battle.DetailInfo)
