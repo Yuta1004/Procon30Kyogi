@@ -2,6 +2,7 @@ package solver
 
 import (
 	"fmt"
+	"github.com/Yuta1004/procon30-kyogi/manager"
 	"os"
 	"path"
 )
@@ -23,4 +24,12 @@ func saveJSON(name string, jsonBody []byte) bool {
 	file.Write(jsonBody)
 	file.Close()
 	return true
+}
+
+func getTeamIDs(battle manager.Battle) (int, int) {
+	myTeamID := battle.Info.TeamID
+	if battle.DetailInfo.Teams[0].TeamID == myTeamID {
+		return myTeamID, battle.DetailInfo.Teams[1].TeamID
+	}
+	return myTeamID, battle.DetailInfo.Teams[0].TeamID
 }
