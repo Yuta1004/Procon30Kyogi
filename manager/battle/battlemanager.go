@@ -43,8 +43,10 @@ func managerProcess(token string) {
 		elapsedTime := nowUnix - battle.DetailInfo.StartedAtUnixTime*1000
 		elapsedTurn := int(elapsedTime / turnMillis)
 		if battle.Turn != elapsedTurn {
-			// TODO : update battle status
-			// TODO : call solver
+			// update battle status
+			newTurnBattle := newBattle(token, battle.Info.ID)
+			newTurnBattle.Info = battle.Info
+			allBattleDict[battle.Info.ID] = newTurnBattle
 		}
 	}
 }
