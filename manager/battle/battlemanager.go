@@ -2,6 +2,7 @@ package battle
 
 import (
 	"github.com/Yuta1004/procon30-kyogi/connector"
+	"time"
 )
 
 // Battle : 試合情報を扱う
@@ -16,7 +17,19 @@ var allBattleDict map[int]Battle
 
 // BManagerExec : 名前の通り, 参加している試合全ての管理をする
 func BManagerExec(token string) {
+	// timer
+	t := time.NewTicker(500 * time.Millisecond)
 
+	// manager process
+	for {
+		select {
+		case <-t.C:
+			managerProcess()
+		}
+	}
+}
+
+func managerProcess() {
 }
 
 func makeAllBattleDict(token string) {
