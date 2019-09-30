@@ -12,9 +12,22 @@ type Battle struct {
 	SolverCh   chan string
 }
 
-var battleList []Battle
+var allBattleDict map[int]Battle
 
 // BManagerExec : 名前の通り, 参加している試合全ての管理をする
-func BManagerExec() {
+func BManagerExec(token string) {
 
+}
+
+func makeAllBattleDict(token string) {
+	battleInfoList := connector.GetAllBattle(token)
+	for _, battleInfo := range *battleInfoList {
+		battleDetailInfo := connector.GetBattleDetail(battleInfo.ID, token)
+		allBattleDict[battleInfo.ID] = Battle{
+			Info:       &battleInfo,
+			DetailInfo: battleDetailInfo,
+			Turn:       battleDetailInfo.Turn,
+			SolverCh:   make(chan string, 10),
+		}
+	}
 }
