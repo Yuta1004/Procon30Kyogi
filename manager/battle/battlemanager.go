@@ -11,3 +11,10 @@ type Battle struct {
 	Turn       int
 	SolverCh   chan string
 }
+
+var battleList []Battle
+
+// BManagerExec : 名前の通り, 参加している試合全ての管理をする
+func BManagerExec() {
+
+}
