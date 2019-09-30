@@ -3,6 +3,7 @@ package battle
 import (
 	"github.com/Yuta1004/procon30-kyogi/connector"
 	"github.com/Yuta1004/procon30-kyogi/manager"
+	"github.com/Yuta1004/procon30-kyogi/manager/solver"
 	"time"
 )
 
@@ -37,9 +38,12 @@ func managerProcess(token string) {
 		elapsedTurn := int(elapsedTime / turnMillis)
 		if battle.Turn != elapsedTurn {
 			// update battle status
-			newTurnBattle := newBattle(token, battle.Info.ID)
-			newTurnBattle.Info = battle.Info
-			allBattleDict[battle.Info.ID] = newTurnBattle
+			newerBattle := newBattle(token, battle.Info.ID)
+			newerBattle.Info = battle.Info
+			allBattleDict[battle.Info.ID] = newerBattle
+
+			// exec solver
+			go solver.ExecSolver(newerBattle.SolverCh, newerBattle)
 		}
 	}
 }
