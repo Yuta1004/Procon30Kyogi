@@ -11,10 +11,8 @@ var allBattleDict map[int]manager.Battle
 
 // BManagerExec : 名前の通り, 参加している試合全ての管理をする
 func BManagerExec(token string) {
-	// timer
+	makeAllBattleDict(token)
 	t := time.NewTicker(500 * time.Millisecond)
-
-	// manager process
 	for {
 		select {
 		case <-t.C:
@@ -27,7 +25,7 @@ func managerProcess(token string) {
 	for _, battle := range allBattleDict {
 		// check solver chan
 		if battle.SolverCh != nil && len(battle.SolverCh) > 0 {
-			go connector.PostActionData(battle.Info.ID, token, <-battle.SolverCh)
+			connector.PostActionData(battle.Info.ID, token, <-battle.SolverCh)
 			battle.SolverCh = nil
 		}
 
