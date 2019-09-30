@@ -52,7 +52,7 @@ type Team struct {
 type Agent struct {
 	AgentID int `json:"agentID"`
 	X       int `json:"x"`
-	Y       int `json:"Y"`
+	Y       int `json:"y"`
 }
 
 // GetAllBattle : 自チームが参加している全ての試合情報を取得する
