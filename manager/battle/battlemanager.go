@@ -11,6 +11,7 @@ var allBattleDict map[int]manager.Battle
 
 // BManagerExec : 名前の通り, 参加している試合全ての管理をする
 func BManagerExec(token string) {
+	allBattleDict = make(map[int]manager.Battle)
 	makeAllBattleDict(token)
 	t := time.NewTicker(500 * time.Millisecond)
 	for {
@@ -34,7 +35,7 @@ func managerProcess(token string) {
 		nowUnix := int(time.Now().UnixNano() / 1000000)
 		elapsedTime := nowUnix - battle.DetailInfo.StartedAtUnixTime*1000
 		elapsedTurn := int(elapsedTime / turnMillis)
-		if battle.Turn != elapsedTurn {
+		if elapsedTurn <= battle.Info.MaxTurn && battle.Turn != elapsedTurn {
 			// update battle status
 			newerBattle := newBattle(token, battle.Info.ID)
 			newerBattle.Info = battle.Info
