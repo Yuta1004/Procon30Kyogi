@@ -1,9 +1,11 @@
 package battle
 
 import (
+	"fmt"
 	"github.com/Yuta1004/procon30-kyogi/connector"
 	"github.com/Yuta1004/procon30-kyogi/manager"
 	"github.com/Yuta1004/procon30-kyogi/manager/solver"
+	"os"
 	"time"
 )
 
@@ -26,7 +28,9 @@ func managerProcess(token string) {
 	for _, battle := range allBattleDict {
 		// check solver chan
 		if battle.SolverCh != nil && len(battle.SolverCh) > 0 {
-			connector.PostActionData(battle.Info.ID, token, <-battle.SolverCh)
+			result := <-battle.SolverCh
+			fmt.Fprintf(os.Stderr, "Solver Output : %s\n", result)
+			connector.PostActionData(battle.Info.ID, token, result)
 			battle.SolverCh = nil
 		}
 
@@ -34,14 +38,15 @@ func managerProcess(token string) {
 		turnMillis := battle.Info.IntervalMillis + battle.Info.TurnMillis
 		nowUnix := int(time.Now().UnixNano() / 1000000)
 		elapsedTime := nowUnix - battle.DetailInfo.StartedAtUnixTime*1000
-		elapsedTurn := int(elapsedTime / turnMillis)
-		if elapsedTurn <= battle.Info.MaxTurn && battle.Turn != elapsedTurn {
+		elapsedTurn := int(elapsedTime/turnMillis) + 1
+		if 0 < elapsedTurn && elapsedTurn <= battle.Info.MaxTurn && battle.Turn != elapsedTurn {
 			// update battle status
 			newerBattle := newBattle(token, battle.Info.ID)
 			newerBattle.Info = battle.Info
 			allBattleDict[battle.Info.ID] = newerBattle
 
 			// exec solver
+			fmt.Fprintf(os.Stderr, "Exec Solver : %d\n", newerBattle.Info.ID)
 			go solver.ExecSolver(newerBattle.SolverCh, newerBattle)
 		}
 	}
@@ -57,6 +62,7 @@ func makeAllBattleDict(token string) {
 }
 
 func newBattle(token string, battleID int) manager.Battle {
+	fmt.Fprintf(os.Stderr, "Get Data : %d\n", battleID)
 	battleDetailInfo := connector.GetBattleDetail(battleID, token)
 	return manager.Battle{
 		DetailInfo: battleDetailInfo,
