@@ -24,12 +24,18 @@ func BManagerExec(token string) {
 	for {
 		select {
 		case <-t.C:
-			managerProcess()
+			managerProcess(token)
 		}
 	}
 }
 
-func managerProcess() {
+func managerProcess(token string) {
+	// check solver chan
+	for _, battle := range allBattleDict {
+		if len(battle.SolverCh) > 0 {
+			go connector.PostActionData(battle.Info.ID, token, <-battle.SolverCh)
+		}
+	}
 }
 
 func makeAllBattleDict(token string) {
