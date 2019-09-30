@@ -52,12 +52,17 @@ func managerProcess(token string) {
 func makeAllBattleDict(token string) {
 	battleInfoList := connector.GetAllBattle(token)
 	for _, battleInfo := range *battleInfoList {
-		battleDetailInfo := connector.GetBattleDetail(battleInfo.ID, token)
-		allBattleDict[battleInfo.ID] = Battle{
-			Info:       &battleInfo,
-			DetailInfo: battleDetailInfo,
-			Turn:       battleDetailInfo.Turn,
-			SolverCh:   make(chan string, 10),
-		}
+		battle := newBattle(token, battleInfo.ID)
+		battle.Info = &battleInfo
+		allBattleDict[battleInfo.ID] = battle
+	}
+}
+
+func newBattle(token string, battleID int) Battle {
+	battleDetailInfo := connector.GetBattleDetail(battleID, token)
+	return Battle{
+		DetailInfo: battleDetailInfo,
+		Turn:       battleDetailInfo.Turn,
+		SolverCh:   make(chan string, 10),
 	}
 }
