@@ -27,11 +27,6 @@ func BManagerExec(token string) {
 func managerProcess(token string) {
 	// main loop
 	for _, battle := range copyAllBattleDict() {
-		// check battle status
-		if battle.Turn <= 0 {
-			continue
-		}
-
 		// check solver chan
 		if battle.SolverCh != nil && len(battle.SolverCh) > 0 {
 			result := <-battle.SolverCh
@@ -47,7 +42,7 @@ func managerProcess(token string) {
 		elapsedTurn := int(elapsedTime/turnMillis) + 1
 
 		// update -> exec solver
-		if 0 < elapsedTurn && elapsedTurn <= battle.Info.MaxTurn && battle.Turn != elapsedTurn {
+		if 1 <= elapsedTurn && elapsedTurn <= battle.Info.MaxTurn && battle.Turn != elapsedTurn {
 			// update battle status
 			newerBattle := makeBattleStruct(token, battle.Info.ID)
 			newerBattle.Info = battle.Info
