@@ -29,6 +29,7 @@ func ExecSolver(ch chan string, battle manager.Battle) {
 
 	// config(container)
 	/* TODO : 適切なメモリ量割り当て */
+	myID, opponentID := getTeamIDs(battle)
 	battleID := battle.Info.ID
 	maxTurn := battle.Info.MaxTurn
 	jsonIn := "/tmp/input.json"
@@ -40,8 +41,8 @@ func ExecSolver(ch chan string, battle manager.Battle) {
 		Cmd: []string{
 			"/bin/sh", "-c",
 			fmt.Sprintf(
-				"echo \"{}\" > /tmp/output.json && timeout -s %d ./solver.py %s %s %d %s %s %d %d %d && cat %s",
-				execTimeLim, jsonIn, jsonOut, battleID, "A", "B", maxTurn, execTimeLim*1000, memLim, jsonOut,
+				"echo \"{}\" > /tmp/output.json && timeout -s %d ./solver.py %s %s %d %d %d %d %d %d && cat %s",
+				execTimeLim, jsonIn, jsonOut, battleID, myID, opponentID, maxTurn, execTimeLim*1000, memLim, jsonOut,
 			),
 		},
 		WorkingDir: "/tmp/",
