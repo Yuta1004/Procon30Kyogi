@@ -30,10 +30,21 @@ func BManagerExec(token string) {
 }
 
 func managerProcess(token string) {
-	// check solver chan
 	for _, battle := range allBattleDict {
-		if len(battle.SolverCh) > 0 {
+		// check solver chan
+		if battle.SolverCh != nil && len(battle.SolverCh) > 0 {
 			go connector.PostActionData(battle.Info.ID, token, <-battle.SolverCh)
+			battle.SolverCh = nil
+		}
+
+		// check to change of turn
+		turnMillis := battle.Info.IntervalMillis + battle.Info.TurnMillis
+		nowUnix := int(time.Now().UnixNano() / 1000000)
+		elapsedTime := nowUnix - battle.DetailInfo.StartedAtUnixTime*1000
+		elapsedTurn := int(elapsedTime / turnMillis)
+		if battle.Turn != elapsedTurn {
+			// TODO : update battle status
+			// TODO : call solver
 		}
 	}
 }
