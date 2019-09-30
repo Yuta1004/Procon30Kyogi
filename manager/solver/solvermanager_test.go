@@ -2,7 +2,7 @@ package solver
 
 import (
 	"github.com/Yuta1004/procon30-kyogi/connector"
-	"github.com/Yuta1004/procon30-kyogi/manager/battle"
+	"github.com/Yuta1004/procon30-kyogi/manager"
 	"testing"
 )
 
@@ -25,6 +25,6 @@ func TestExecSolver(t *testing.T) {
 
 	// test
 	ch := make(chan string, 1)
-	go ExecSolver(ch, battle.Battle{Info: &battleInfo, DetailInfo: &battleDetail, Turn: 1})
+	go ExecSolver(ch, manager.Battle{Info: &battleInfo, DetailInfo: &battleDetail, Turn: 1})
 	<-ch
 }
