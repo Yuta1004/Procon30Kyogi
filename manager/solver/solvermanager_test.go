@@ -25,6 +25,6 @@ func TestExecSolver(t *testing.T) {
 
 	// test
 	ch := make(chan string, 1)
-	go ExecSolver(ch, manager.Battle{Info: &battleInfo, DetailInfo: &battleDetail, Turn: 1})
+	go ExecSolver(ch, manager.Battle{Info: battleInfo, DetailInfo: battleDetail, Turn: 1})
 	<-ch
 }
