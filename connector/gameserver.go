@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/Yuta1004/procon30-kyogi/config"
+	"log"
 	"os"
 	"strconv"
 )
@@ -57,16 +58,18 @@ type Agent struct {
 
 // GetAllBattle : 自チームが参加している全ての試合情報を取得する
 func GetAllBattle(token string) *[]BattleInfo {
-	// get data
-	config := config.GetConfigData()
-	reqURL := config.GameServer.URL + "/matches"
-	resBody := httpGet(reqURL, token)
-
-	// json unmarshal
 	var battleInfo []BattleInfo
-	if err := json.Unmarshal(resBody, &battleInfo); err != nil {
-		fmt.Fprintf(os.Stderr, "%s\n", err)
-		return nil
+	for retryCnt := 3; retryCnt > 0; retryCnt-- {
+		// get data
+		config := config.GetConfigData()
+		reqURL := config.GameServer.URL + "/matches"
+		resBody := httpGet(reqURL, token)
+
+		// json unmarshal
+		if err := json.Unmarshal(resBody, &battleInfo); err != nil {
+			log.Printf("試合情報の取得でエラーが発生しました -> GETALLBATTLE001, Retry: %d\n", retryCnt-1)
+		}
+		break
 	}
 	return &battleInfo
 }
