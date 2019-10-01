@@ -6,8 +6,8 @@ import (
 
 // Battle : 試合情報を扱う
 type Battle struct {
-	Info       *connector.BattleInfo
-	DetailInfo *connector.BattleDetailInfo
+	Info       connector.BattleInfo
+	DetailInfo connector.BattleDetailInfo
 	Turn       int
 	SolverCh   chan string
 }
