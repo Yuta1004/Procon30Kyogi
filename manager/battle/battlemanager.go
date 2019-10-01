@@ -54,6 +54,7 @@ func managerProcess(token string) {
 				// update battle status
 				newerBattle.Info = battle.Info
 				allBattleDict[battle.Info.ID] = newerBattle
+				log.Printf("\x1b[32m[NOTIFY] 次ターンに移行しました -> BattleID: %d, Turn : %d\x1b[0m\n", newerBattle.Info.ID, newerBattle.Turn)
 
 				// exec solver
 				go solver.ExecSolver(newerBattle.SolverCh, newerBattle)
