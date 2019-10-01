@@ -30,8 +30,8 @@ func managerProcess(token string) {
 		// check solver chan
 		if battle.SolverCh != nil && len(battle.SolverCh) > 0 {
 			result := <-battle.SolverCh
-			fmt.Fprintf(os.Stderr, "Solver Output : %s\n", result)
-			connector.PostActionData(battle.Info.ID, token, result)
+			fmt.Fprintf(os.Stderr, "Solver Output\n")
+			go connector.PostActionData(battle.Info.ID, token, result)
 			battle.SolverCh = nil
 		}
 
@@ -41,16 +41,24 @@ func managerProcess(token string) {
 		elapsedTime := nowUnix - battle.DetailInfo.StartedAtUnixTime*1000
 		elapsedTurn := int(elapsedTime/turnMillis) + 1
 
+		// fmt.Fprintf(
+		// 	os.Stderr,
+		// 	"BattleID: %d, NowUnix: %d, StartedAtUnixTime: %d, ElapsedTime: %d, ElapsedTurn: %d, Turn: %d, TurnMilis: %d\n",
+		// 	battle.Info.ID, nowUnix, battle.DetailInfo.StartedAtUnixTime, elapsedTime, elapsedTurn, battle.Turn, turnMillis,
+		// )
+
 		// update -> exec solver
 		if 0 <= elapsedTime && 1 <= elapsedTurn && elapsedTurn <= battle.Info.MaxTurn && battle.Turn != elapsedTurn {
-			// update battle status
 			newerBattle := makeBattleStruct(token, battle.Info.ID)
-			newerBattle.Info = battle.Info
-			allBattleDict[battle.Info.ID] = newerBattle
+			if newerBattle.Turn != battle.Turn {
+				// update battle status
+				newerBattle.Info = battle.Info
+				allBattleDict[battle.Info.ID] = newerBattle
 
-			// exec solver
-			fmt.Fprintf(os.Stderr, "Exec Solver : %d\n", newerBattle.Info.ID)
-			go solver.ExecSolver(newerBattle.SolverCh, newerBattle)
+				// exec solver
+				fmt.Fprintf(os.Stderr, "Exec Solver : %d\n", newerBattle.Info.ID)
+				go solver.ExecSolver(newerBattle.SolverCh, newerBattle)
+			}
 		}
 	}
 }
