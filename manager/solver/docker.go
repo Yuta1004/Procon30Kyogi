@@ -2,20 +2,19 @@ package solver
 
 import (
 	"context"
-	"fmt"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/network"
 	"github.com/docker/docker/client"
 	"io/ioutil"
-	"os"
+	"log"
 )
 
 func callContainer(confCont *container.Config, confHost *container.HostConfig, name string) string {
 	// crate client
 	client, err := client.NewClientWithOpts(client.WithVersion("1.40"))
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s\n", err)
+		log.Printf("ソルバ起動中にエラーが発生しました -> CALLCONTAINER001\n")
 		return "{}"
 	}
 
@@ -23,14 +22,14 @@ func callContainer(confCont *container.Config, confHost *container.HostConfig, n
 	ctx := context.Background()
 	cont, err := client.ContainerCreate(ctx, confCont, confHost, &network.NetworkingConfig{}, name)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s\n", err)
+		log.Printf("ソルバ起動中にエラーが発生しました -> CALLCONTAINER002\n")
 		return "{}"
 	}
 
 	// start
 	err = client.ContainerStart(ctx, cont.ID, types.ContainerStartOptions{})
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s\n", err)
+		log.Printf("ソルバ起動中にエラーが発生しました -> CALLCONTAINER003\n")
 		return "{}"
 	}
 	defer client.ContainerRemove(ctx, cont.ID, types.ContainerRemoveOptions{})
@@ -38,8 +37,8 @@ func callContainer(confCont *container.Config, confHost *container.HostConfig, n
 	// wait...
 	statusCh, errCh := client.ContainerWait(ctx, cont.ID, container.WaitConditionNotRunning)
 	select {
-	case err := <-errCh:
-		fmt.Fprintf(os.Stderr, "%s\n", err)
+	case <-errCh:
+		log.Printf("ソルバ実行中にエラーが発生しました -> CALLCONTAINER004\n")
 		return "{}"
 	case <-statusCh:
 	}
@@ -47,7 +46,7 @@ func callContainer(confCont *container.Config, confHost *container.HostConfig, n
 	// get log
 	out, err := client.ContainerLogs(ctx, cont.ID, types.ContainerLogsOptions{ShowStdout: true})
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s\n", err)
+		log.Printf("ソルバ実行中にエラーが発生しました -> CALLCONTAINER005\n")
 		return "{}"
 	}
 	result, _ := ioutil.ReadAll(out)
