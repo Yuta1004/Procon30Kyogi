@@ -19,7 +19,7 @@ func makeAllBattleDict(token string) {
 	battleInfoList := connector.GetAllBattle(token)
 	for _, battleInfo := range *battleInfoList {
 		battle := makeBattleStruct(token, battleInfo.ID)
-		battle.Info = &battleInfo
+		battle.Info = battleInfo
 		allBattleDict[battleInfo.ID] = battle
 	}
 }
