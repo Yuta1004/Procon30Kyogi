@@ -30,6 +30,7 @@ func makeAllBattleDict(token string) {
 		battle := makeBattleStruct(token, battleInfo.ID)
 		battle.Info = battleInfo
 		allBattleDict[battleInfo.ID] = battle
+		log.Printf("[INFO] 試合管理を始めます -> BattleID: %d\n", battle.Info.ID)
 	}
 }
 
