@@ -67,17 +67,17 @@ func calcTimeStatus(battle manager.Battle) (int, int) {
 func reliefBattle(token string, battle manager.Battle) {
 	// relief failed...
 	if battle.ProcessErrCnt >= 5 {
-		log.Printf("\x1b[31m[ERROR] 試合情報の復旧に失敗しました. 該当試合の更新を中断します -> BattleID: %d\n", battle.Info.ID)
+		log.Printf("\x1b[31m[ERROR] 試合情報の復旧に失敗しました. 該当試合の更新を中断します -> BattleID: %d\x1b[0m\n", battle.Info.ID)
 		delete(allBattleDict, battle.Info.ID)
 		return
 	}
 
 	// relief
 	if battle.DetailInfo.StartedAtUnixTime == 0 {
-		log.Printf("\x1b[31m[ERROR] 試合情報の復旧を行います -> BattleID: %d\n", battle.Info.ID)
+		log.Printf("\x1b[31m[ERROR] 試合情報の復旧を行います -> BattleID: %d, ErrCnt: %d\x1b[0m\n", battle.Info.ID, battle.ProcessErrCnt+1)
 		newerBattle := makeBattleStruct(token, battle.Info.ID)
 		newerBattle.Info = battle.Info
-		newerBattle.ProcessErrCnt++
+		newerBattle.ProcessErrCnt = battle.ProcessErrCnt + 1
 		allBattleDict[battle.Info.ID] = newerBattle
 	}
 }
