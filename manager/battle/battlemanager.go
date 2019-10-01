@@ -12,7 +12,7 @@ var allBattleDict map[int]manager.Battle
 
 // BManagerExec : 名前の通り, 参加している試合全ての管理をする
 func BManagerExec(token string) {
-	log.Printf("BattleManager起動...\n")
+	log.Printf("[INFO] BattleManager起動...\n")
 	allBattleDict = make(map[int]manager.Battle)
 	makeAllBattleDict(token)
 	t := time.NewTicker(500 * time.Millisecond)
@@ -30,7 +30,7 @@ func managerProcess(token string) {
 		// check solver chan
 		if battle.SolverCh != nil && len(battle.SolverCh) > 0 {
 			result := <-battle.SolverCh
-			log.Printf("ソルバの実行が終了しました -> BattleID: %d\n", battle.Info.ID)
+			log.Printf("[INFO] ソルバの実行が終了しました -> BattleID: %d\n", battle.Info.ID)
 			go connector.PostActionData(battle.Info.ID, token, result)
 			battle.SolverCh = nil
 		}

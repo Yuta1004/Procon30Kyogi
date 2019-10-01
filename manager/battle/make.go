@@ -16,10 +16,10 @@ func copyAllBattleDict() (tmp map[int]manager.Battle) {
 
 func makeAllBattleDict(token string) {
 	// error check
-	log.Printf("参加している全て試合の情報を取得しています... -> Token: %s\n", token)
+	log.Printf("[INFO] 参加している全て試合の情報を取得しています... -> Token: %s\n", token)
 	battleInfoList := connector.GetAllBattle(token)
 	if len(*battleInfoList) == 0 {
-		log.Printf("参加している試合が存在しないか、情報の取得に失敗しました -> MAKEALLBATTLEDICT001\n")
+		log.Printf("\x1b[31m[ERROR] 参加している試合が存在しないか、情報の取得に失敗しました -> MAKEALLBATTLEDICT001\x1b[0m\n")
 		return
 	}
 
@@ -33,10 +33,10 @@ func makeAllBattleDict(token string) {
 
 func makeBattleStruct(token string, battleID int) manager.Battle {
 	// error check
-	log.Printf("試合情報詳細を取得しています... -> Token: %s, BattleID: %d", token, battleID)
+	log.Printf("[INFO] 試合情報詳細を取得しています... -> Token: %s, BattleID: %d", token, battleID)
 	battleDetailInfo := connector.GetBattleDetail(battleID, token)
 	if battleDetailInfo.Width == 0 {
-		log.Printf("試合情報詳細の取得に失敗しました -> MAKEBATTLESTRUCT001\n")
+		log.Printf("\x1b[31m[ERROR] 試合情報詳細の取得に失敗しました -> MAKEBATTLESTRUCT001\x1b[0m\n")
 		return manager.Battle{}
 	}
 	return manager.Battle{
