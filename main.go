@@ -1,7 +1,11 @@
 package main
 
-import "fmt"
+import (
+	"github.com/Yuta1004/procon30-kyogi/config"
+	"github.com/Yuta1004/procon30-kyogi/manager/battle"
+)
 
 func main() {
-	fmt.Println("Hello world!")
+	conf := config.GetConfigData()
+	battle.BManagerExec(conf.GameServer.Token)
 }

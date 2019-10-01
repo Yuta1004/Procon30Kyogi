@@ -1,5 +1,6 @@
 [GAMESERVER]
 url = "server url"
+token = "token"
 
 [SOLVER]
 image = "docker image"
