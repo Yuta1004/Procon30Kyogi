@@ -2,10 +2,8 @@ package connector
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/Yuta1004/procon30-kyogi/config"
 	"log"
-	"os"
 	"strconv"
 )
 
