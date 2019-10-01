@@ -56,20 +56,25 @@ func managerProcess(token string) {
 			}
 		}
 
-		// relief failed...
-		if battle.ProcessErrCnt >= 5 {
-			log.Printf("\x1b[31m[ERROR] 試合情報の復旧に失敗しました. 該当試合の更新を中断します -> BattleID: %d\n", battle.Info.ID)
-			delete(allBattleDict, battle.Info.ID)
-			continue
-		}
-
 		// relief
-		if battle.DetailInfo.StartedAtUnixTime == 0 {
-			log.Printf("\x1b[31m[ERROR] 試合情報の復旧を行います -> BattleID: %d\n", battle.Info.ID)
-			newerBattle := makeBattleStruct(token, battle.Info.ID)
-			newerBattle.Info = battle.Info
-			newerBattle.ProcessErrCnt++
-			allBattleDict[battle.Info.ID] = newerBattle
-		}
+		reliefBattle(token, battle)
+	}
+}
+
+func reliefBattle(token string, battle manager.Battle) {
+	// relief failed...
+	if battle.ProcessErrCnt >= 5 {
+		log.Printf("\x1b[31m[ERROR] 試合情報の復旧に失敗しました. 該当試合の更新を中断します -> BattleID: %d\n", battle.Info.ID)
+		delete(allBattleDict, battle.Info.ID)
+		return
+	}
+
+	// relief
+	if battle.DetailInfo.StartedAtUnixTime == 0 {
+		log.Printf("\x1b[31m[ERROR] 試合情報の復旧を行います -> BattleID: %d\n", battle.Info.ID)
+		newerBattle := makeBattleStruct(token, battle.Info.ID)
+		newerBattle.Info = battle.Info
+		newerBattle.ProcessErrCnt++
+		allBattleDict[battle.Info.ID] = newerBattle
 	}
 }
