@@ -97,9 +97,17 @@ func GetBattleDetail(battleID int, token string) BattleDetailInfo {
 
 // PostActionData : 行動情報を送信する
 func PostActionData(battleID int, token string, actionData string) bool {
-	// post data
-	config := config.GetConfigData()
-	battleIDStr := strconv.Itoa(battleID)
-	reqURL := config.GameServer.URL + "/matches/" + battleIDStr + "/action"
-	return httpPostJSON(reqURL, token, actionData)
+	result := false
+	for retryCnt := 3; retryCnt > 0; retryCnt-- {
+		config := config.GetConfigData()
+		battleIDStr := strconv.Itoa(battleID)
+		reqURL := config.GameServer.URL + "/matches/" + battleIDStr + "/action"
+		result = httpPostJSON(reqURL, token, actionData)
+		if !result {
+			log.Printf("行動情報送信の際にエラーが発生しました -> POSTACTIONDATA001, Retry: %d\n", retryCnt-1)
+			continue
+		}
+		break
+	}
+	return result
 }
