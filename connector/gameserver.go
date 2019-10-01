@@ -68,6 +68,7 @@ func GetAllBattle(token string) *[]BattleInfo {
 		// json unmarshal
 		if err := json.Unmarshal(resBody, &battleInfo); err != nil {
 			log.Printf("試合情報の取得でエラーが発生しました -> GETALLBATTLE001, Retry: %d\n", retryCnt-1)
+			continue
 		}
 		break
 	}
@@ -76,17 +77,20 @@ func GetAllBattle(token string) *[]BattleInfo {
 
 // GetBattleDetail : 試合情報詳細を取得する
 func GetBattleDetail(battleID int, token string) BattleDetailInfo {
-	// get data
-	config := config.GetConfigData()
-	battleIDStr := strconv.Itoa(battleID)
-	reqURL := config.GameServer.URL + "/matches/" + battleIDStr
-	resBody := httpGet(reqURL, token)
-
-	// json unmarshal
 	var battleDetailInfo BattleDetailInfo
-	if err := json.Unmarshal(resBody, &battleDetailInfo); err != nil {
-		fmt.Fprintf(os.Stderr, "%s\n", err)
-		return BattleDetailInfo{}
+	for retryCnt := 3; retryCnt > 0; retryCnt-- {
+		// get data
+		config := config.GetConfigData()
+		battleIDStr := strconv.Itoa(battleID)
+		reqURL := config.GameServer.URL + "/matches/" + battleIDStr
+		resBody := httpGet(reqURL, token)
+
+		// json unmarshal
+		if err := json.Unmarshal(resBody, &battleDetailInfo); err != nil {
+			log.Printf("試合情報の取得でエラーが発生しました -> GETBATTLEDETAIL001, Retry: %d\n", retryCnt-1)
+			continue
+		}
+		break
 	}
 	return battleDetailInfo
 }
