@@ -35,13 +35,8 @@ func managerProcess(token string) {
 			battle.SolverCh = nil
 		}
 
-		// calc elapsedTurn...
-		turnMillis := battle.Info.IntervalMillis + battle.Info.TurnMillis
-		nowUnix := int(time.Now().UnixNano() / 1000000)
-		elapsedTime := nowUnix - battle.DetailInfo.StartedAtUnixTime*1000
-		elapsedTurn := int(elapsedTime/turnMillis) + 1
-
 		// update -> exec solver
+		elapsedTime, elapsedTurn := calcTimeStatus(battle)
 		if 0 <= elapsedTime && 1 <= elapsedTurn && elapsedTurn <= battle.Info.MaxTurn && battle.Turn != elapsedTurn {
 			newerBattle := makeBattleStruct(token, battle.Info.ID)
 			if newerBattle.Turn != battle.Turn {
@@ -59,6 +54,14 @@ func managerProcess(token string) {
 		// relief
 		reliefBattle(token, battle)
 	}
+}
+
+func calcTimeStatus(battle manager.Battle) (int, int) {
+	turnMillis := battle.Info.IntervalMillis + battle.Info.TurnMillis
+	nowUnix := int(time.Now().UnixNano() / 1000000)
+	elapsedTime := nowUnix - battle.DetailInfo.StartedAtUnixTime*1000
+	elapsedTurn := int(elapsedTime/turnMillis) + 1
+	return elapsedTime, elapsedTurn
 }
 
 func reliefBattle(token string, battle manager.Battle) {
