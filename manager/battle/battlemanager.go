@@ -42,7 +42,7 @@ func managerProcess(token string) {
 		elapsedTurn := int(elapsedTime/turnMillis) + 1
 
 		// update -> exec solver
-		if 1 <= elapsedTurn && elapsedTurn <= battle.Info.MaxTurn && battle.Turn != elapsedTurn {
+		if 0 <= elapsedTime && 1 <= elapsedTurn && elapsedTurn <= battle.Info.MaxTurn && battle.Turn != elapsedTurn {
 			// update battle status
 			newerBattle := makeBattleStruct(token, battle.Info.ID)
 			newerBattle.Info = battle.Info
