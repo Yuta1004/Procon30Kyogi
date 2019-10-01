@@ -41,24 +41,35 @@ func managerProcess(token string) {
 		elapsedTime := nowUnix - battle.DetailInfo.StartedAtUnixTime*1000
 		elapsedTurn := int(elapsedTime/turnMillis) + 1
 
-		// fmt.Fprintf(
-		// 	os.Stderr,
-		// 	"BattleID: %d, NowUnix: %d, StartedAtUnixTime: %d, ElapsedTime: %d, ElapsedTurn: %d, Turn: %d, TurnMilis: %d\n",
-		// 	battle.Info.ID, nowUnix, battle.DetailInfo.StartedAtUnixTime, elapsedTime, elapsedTurn, battle.Turn, turnMillis,
-		// )
-
 		// update -> exec solver
 		if 0 <= elapsedTime && 1 <= elapsedTurn && elapsedTurn <= battle.Info.MaxTurn && battle.Turn != elapsedTurn {
 			newerBattle := makeBattleStruct(token, battle.Info.ID)
 			if newerBattle.Turn != battle.Turn {
 				// update battle status
 				newerBattle.Info = battle.Info
+				newerBattle.ProcessErrCnt = 0
 				allBattleDict[battle.Info.ID] = newerBattle
 				log.Printf("\x1b[32m[NOTIFY] 次ターンに移行しました -> BattleID: %d, Turn : %d\x1b[0m\n", newerBattle.Info.ID, newerBattle.Turn)
 
 				// exec solver
 				go solver.ExecSolver(newerBattle.SolverCh, newerBattle)
 			}
+		}
+
+		// relief failed...
+		if battle.ProcessErrCnt >= 5 {
+			log.Printf("\x1b[31m[ERROR] 試合情報の復旧に失敗しました. 該当試合の更新を中断します -> BattleID: %d\n", battle.Info.ID)
+			delete(allBattleDict, battle.Info.ID)
+			continue
+		}
+
+		// relief
+		if battle.DetailInfo.StartedAtUnixTime == 0 {
+			log.Printf("\x1b[31m[ERROR] 試合情報の復旧を行います -> BattleID: %d\n", battle.Info.ID)
+			newerBattle := makeBattleStruct(token, battle.Info.ID)
+			newerBattle.Info = battle.Info
+			newerBattle.ProcessErrCnt++
+			allBattleDict[battle.Info.ID] = newerBattle
 		}
 	}
 }
