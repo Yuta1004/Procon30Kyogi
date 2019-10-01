@@ -7,7 +7,7 @@ import (
 	"github.com/Yuta1004/procon30-kyogi/manager"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/mount"
-	"os"
+	"log"
 	"strconv"
 )
 
@@ -17,7 +17,7 @@ func ExecSolver(ch chan string, battle manager.Battle) {
 	jsonFName := strconv.Itoa(battle.Info.ID) + "_" + strconv.Itoa(battle.Turn)
 	jsonStr, err := json.Marshal(battle.DetailInfo)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s\n", err)
+		log.Printf("\x1b[31m[ERROR] ソルバ起動準備中にエラーが発生しました -> EXECSOLVER001\x1b[0m\n")
 		ch <- "Error"
 		return
 	}
@@ -60,6 +60,7 @@ func ExecSolver(ch chan string, battle manager.Battle) {
 		},
 	}
 
+	log.Printf("[INFO] ソルバを起動します -> BattleID: %d\n", battleID)
 	ch <- callContainer(&confCont, &confHost, "Procon30_"+jsonFName)
 	return
 }

@@ -2,9 +2,8 @@ package connector
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/Yuta1004/procon30-kyogi/config"
-	"os"
+	"log"
 	"strconv"
 )
 
@@ -57,42 +56,60 @@ type Agent struct {
 
 // GetAllBattle : 自チームが参加している全ての試合情報を取得する
 func GetAllBattle(token string) *[]BattleInfo {
-	// get data
-	config := config.GetConfigData()
-	reqURL := config.GameServer.URL + "/matches"
-	resBody := httpGet(reqURL, token)
-
-	// json unmarshal
 	var battleInfo []BattleInfo
-	if err := json.Unmarshal(resBody, &battleInfo); err != nil {
-		fmt.Fprintf(os.Stderr, "%s\n", err)
-		return nil
+	for retryCnt := 3; retryCnt > 0; retryCnt-- {
+		// get data
+		config := config.GetConfigData()
+		reqURL := config.GameServer.URL + "/matches"
+		resBody := httpGet(reqURL, token)
+
+		// json unmarshal
+		if err := json.Unmarshal(resBody, &battleInfo); err != nil {
+			log.Printf("\x1b[31m[ERROR] 試合情報の取得でエラーが発生しました -> GETALLBATTLE001, Retry: %d\x1b[0m\n", retryCnt-1)
+			continue
+		}
+		break
 	}
 	return &battleInfo
 }
 
 // GetBattleDetail : 試合情報詳細を取得する
 func GetBattleDetail(battleID int, token string) BattleDetailInfo {
-	// get data
-	config := config.GetConfigData()
-	battleIDStr := strconv.Itoa(battleID)
-	reqURL := config.GameServer.URL + "/matches/" + battleIDStr
-	resBody := httpGet(reqURL, token)
-
-	// json unmarshal
 	var battleDetailInfo BattleDetailInfo
-	if err := json.Unmarshal(resBody, &battleDetailInfo); err != nil {
-		fmt.Fprintf(os.Stderr, "%s\n", err)
-		return BattleDetailInfo{}
+	for retryCnt := 3; retryCnt > 0; retryCnt-- {
+		// get data
+		config := config.GetConfigData()
+		battleIDStr := strconv.Itoa(battleID)
+		reqURL := config.GameServer.URL + "/matches/" + battleIDStr
+		resBody := httpGet(reqURL, token)
+
+		// json unmarshal
+		if err := json.Unmarshal(resBody, &battleDetailInfo); err != nil {
+			log.Printf("\x1b[31m試合情報の取得でエラーが発生しました -> GETBATTLEDETAIL001, Retry: %d\x1b[0m\n", retryCnt-1)
+			continue
+		}
+		break
 	}
 	return battleDetailInfo
 }
 
 // PostActionData : 行動情報を送信する
 func PostActionData(battleID int, token string, actionData string) bool {
-	// post data
-	config := config.GetConfigData()
-	battleIDStr := strconv.Itoa(battleID)
-	reqURL := config.GameServer.URL + "/matches/" + battleIDStr + "/action"
-	return httpPostJSON(reqURL, token, actionData)
+	result := false
+	for retryCnt := 3; retryCnt > 0; retryCnt-- {
+		config := config.GetConfigData()
+		battleIDStr := strconv.Itoa(battleID)
+		reqURL := config.GameServer.URL + "/matches/" + battleIDStr + "/action"
+		result = httpPostJSON(reqURL, token, actionData)
+		if !result {
+			log.Printf("\x1b[31m行動情報送信の際にエラーが発生しました -> POSTACTIONDATA001, Retry: %d\x1b[0m\n", retryCnt-1)
+			continue
+		}
+		break
+	}
+
+	if result {
+		log.Printf("[INFO] 行動情報送信が正常に完了しました -> Token: %s, BattleID: %d\n", token, battleID)
+	}
+	return result
 }

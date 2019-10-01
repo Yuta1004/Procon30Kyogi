@@ -1,8 +1,8 @@
 package solver
 
 import (
-	"fmt"
 	"github.com/Yuta1004/procon30-kyogi/manager"
+	"log"
 	"os"
 	"path"
 )
@@ -18,7 +18,7 @@ func saveJSON(name string, jsonBody []byte) bool {
 	// save json
 	file, err := os.Create(rootPath + "/tmp/" + name + ".json")
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s\n", err)
+		log.Printf("\x1b[31mソルバ起動準備中にエラーが発生しました -> SAVEJSON\x1b[0m\n")
 		return false
 	}
 	file.Write(jsonBody)
@@ -27,6 +27,11 @@ func saveJSON(name string, jsonBody []byte) bool {
 }
 
 func getTeamIDs(battle manager.Battle) (int, int) {
+	// size check
+	if len(battle.DetailInfo.Teams) == 0 {
+		return -1, -1
+	}
+
 	myTeamID := battle.Info.TeamID
 	if battle.DetailInfo.Teams[0].TeamID == myTeamID {
 		return myTeamID, battle.DetailInfo.Teams[1].TeamID
