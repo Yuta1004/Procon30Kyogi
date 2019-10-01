@@ -27,6 +27,11 @@ func saveJSON(name string, jsonBody []byte) bool {
 }
 
 func getTeamIDs(battle manager.Battle) (int, int) {
+	// size check
+	if len(battle.DetailInfo.Teams) == 0 {
+		return -1, -1
+	}
+
 	myTeamID := battle.Info.TeamID
 	if battle.DetailInfo.Teams[0].TeamID == myTeamID {
 		return myTeamID, battle.DetailInfo.Teams[1].TeamID
