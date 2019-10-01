@@ -4,6 +4,7 @@ import (
 	"github.com/Yuta1004/procon30-kyogi/connector"
 	"github.com/Yuta1004/procon30-kyogi/manager"
 	"log"
+	"os"
 )
 
 func copyAllBattleDict() (tmp map[int]manager.Battle) {
@@ -20,7 +21,8 @@ func makeAllBattleDict(token string) {
 	battleInfoList := connector.GetAllBattle(token)
 	if len(*battleInfoList) == 0 {
 		log.Printf("\x1b[31m[ERROR] 参加している試合が存在しないか、情報の取得に失敗しました -> MAKEALLBATTLEDICT001\x1b[0m\n")
-		return
+		log.Printf("\x1b[31m[ERROR] システムを終了します...\x1b[0m\n")
+		os.Exit(1)
 	}
 
 	// make allBattleDict
