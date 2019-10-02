@@ -107,6 +107,8 @@ func PostActionData(battleID int, token string, actionData string) bool {
 
 	if result {
 		log.Printf("[INFO] 行動情報送信が正常に完了しました -> Token: %s, BattleID: %d\n", token, battleID)
+	} else {
+		log.Printf("\x1b[31m[ERROR] 行動情報送信に失敗しました -> POSTACTIONDATA001\x1b[0m\n")
 	}
 	return result
 }
