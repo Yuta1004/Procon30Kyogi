@@ -54,7 +54,7 @@ func ExecSolver(ch chan string, battle manager.Battle) {
 		Mounts: []mount.Mount{
 			{
 				Type:   mount.TypeBind,
-				Source: rootPath + "/tmp/" + jsonFName + ".json",
+				Source: "./tmp/" + jsonFName + ".json",
 				Target: "/tmp/input.json",
 			},
 		},
