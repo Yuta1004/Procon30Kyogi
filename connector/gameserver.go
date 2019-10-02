@@ -65,7 +65,6 @@ func GetAllBattle(token string) *[]BattleInfo {
 
 		// json unmarshal
 		if err := json.Unmarshal(resBody, &battleInfo); err != nil {
-			log.Printf("\x1b[31m[ERROR] 試合情報の取得でエラーが発生しました -> GETALLBATTLE001, Retry: %d\x1b[0m\n", retryCnt-1)
 			continue
 		}
 		break
@@ -85,7 +84,6 @@ func GetBattleDetail(battleID int, token string) BattleDetailInfo {
 
 		// json unmarshal
 		if err := json.Unmarshal(resBody, &battleDetailInfo); err != nil {
-			log.Printf("\x1b[31m[ERROR] 試合情報の取得でエラーが発生しました -> GETBATTLEDETAIL001, Retry: %d\x1b[0m\n", retryCnt-1)
 			continue
 		}
 		break
@@ -102,7 +100,6 @@ func PostActionData(battleID int, token string, actionData string) bool {
 		reqURL := config.GameServer.URL + "/matches/" + battleIDStr + "/action"
 		result = httpPostJSON(reqURL, token, actionData)
 		if !result {
-			log.Printf("\x1b[31m[ERROR] 行動情報送信の際にエラーが発生しました -> POSTACTIONDATA001, Retry: %d\x1b[0m\n", retryCnt-1)
 			continue
 		}
 		break
@@ -110,6 +107,8 @@ func PostActionData(battleID int, token string, actionData string) bool {
 
 	if result {
 		log.Printf("[INFO] 行動情報送信が正常に完了しました -> Token: %s, BattleID: %d\n", token, battleID)
+	} else {
+		log.Printf("\x1b[31m[ERROR] 行動情報送信に失敗しました -> POSTACTIONDATA001\x1b[0m\n")
 	}
 	return result
 }
