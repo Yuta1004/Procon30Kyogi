@@ -2,13 +2,10 @@ package config
 
 import (
 	"github.com/BurntSushi/toml"
-	"os"
-	"path"
 )
 
 var (
-	config   Config
-	rootPath = path.Join(os.Getenv("GOPATH"), "src/github.com/Yuta1004/procon30-kyogi")
+	config Config
 )
 
 // Config : 設定情報を扱う構造体
@@ -31,7 +28,7 @@ type Solver struct {
 // GetConfigData : 設定情報を返す
 func GetConfigData() *Config {
 	if config.GameServer.URL == "" {
-		_, err := toml.DecodeFile(rootPath+"/config.toml", &config)
+		_, err := toml.DecodeFile("config.toml", &config)
 		if err != nil {
 			return nil
 		}
