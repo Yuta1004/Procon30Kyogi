@@ -20,5 +20,5 @@ func getScore(battle manager.Battle) [][]int {
 	if myTeamID == battle.DetailInfo.Teams[0].TeamID {
 		return [][]int{scoreA, scoreB}
 	}
-	return [][]int{scoreA, scoreB}
+	return [][]int{scoreB, scoreA}
 }
