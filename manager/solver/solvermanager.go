@@ -8,6 +8,7 @@ import (
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/mount"
 	"log"
+	"os"
 	"strconv"
 )
 
@@ -50,11 +51,12 @@ func ExecSolver(ch chan string, battle manager.Battle) {
 	}
 
 	// config(host)
+	cPath, _ := os.Getwd()
 	confHost := container.HostConfig{
 		Mounts: []mount.Mount{
 			{
 				Type:   mount.TypeBind,
-				Source: "./tmp/" + jsonFName + ".json",
+				Source: cPath + "/tmp/" + jsonFName + ".json",
 				Target: "/tmp/input.json",
 			},
 		},
