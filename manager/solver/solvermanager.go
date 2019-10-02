@@ -15,7 +15,7 @@ import (
 // ExecSolver : ソルバを起動, 実行する
 func ExecSolver(ch chan string, battle manager.Battle) {
 	// setting json
-	jsonFName := strconv.Itoa(battle.Info.ID) + "_" + strconv.Itoa(battle.Turn)
+	jsonFName := strconv.Itoa(battle.Info.ID) + "_" + strconv.Itoa(battle.Info.TeamID) + "_" + strconv.Itoa(battle.Turn)
 	jsonStr, err := json.Marshal(battle.DetailInfo)
 	if err != nil {
 		log.Printf("\x1b[31m[ERROR] ソルバ起動準備中にエラーが発生しました -> EXECSOLVER001\x1b[0m\n")
