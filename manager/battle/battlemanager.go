@@ -12,9 +12,20 @@ var allBattleDict map[int]manager.Battle
 
 // BManagerExec : 名前の通り, 参加している試合全ての管理をする
 func BManagerExec(token string) {
+	// panic handling
+	defer func() {
+		if err := recover(); err != nil {
+			log.Printf("\x1b[31m[ERROR] 回復不可能なエラー(panic)が発生しました! BattleManagerを終了します!\x1b[0m\n")
+			log.Printf("\x1b[31m%s\x1b[0m\n", err)
+		}
+	}()
+
+	// setting...
 	log.Printf("[INFO] BattleManager起動...\n")
 	allBattleDict = make(map[int]manager.Battle)
 	makeAllBattleDict(token)
+
+	// mainloop
 	t := time.NewTicker(500 * time.Millisecond)
 	for {
 		select {
