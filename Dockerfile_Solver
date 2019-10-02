@@ -1,0 +1,11 @@
+FROM alpine:procon30-solver-base
+
+COPY solver.py /tmp/
+
+RUN     echo "[INFO] Setup solver.py" && \
+        cd /tmp && \
+        echo "#!/usr/bin/env python3" > test.py && \
+        echo "import numpy" >> test.py && \
+        chmod +x test.py && \
+        chmod +x solver.py && \
+        ./test.py

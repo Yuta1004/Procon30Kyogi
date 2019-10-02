@@ -1,7 +1,5 @@
 FROM alpine:latest
 
-COPY solver.py /tmp/
-
 RUN     echo "[Info] Start Build..." && \
         set -x && \
         echo "[Info] Install Packages..." && \
@@ -18,11 +16,4 @@ RUN     echo "[Info] Start Build..." && \
                 openblas-dev && \
         echo "[Info] Insall Python libaries..." && \
         pip3 install --upgrade pip && \
-        pip3 install numpy && \
-        echo "[INFO] Setup solver.py" && \
-        cd /tmp && \
-        echo "#!/usr/bin/env python3" > test.py && \
-        echo "import numpy" >> test.py && \
-        chmod +x test.py && \
-        chmod +x solver.py && \
-        ./test.py
+        pip3 install numpy
