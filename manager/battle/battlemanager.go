@@ -82,7 +82,7 @@ func outBattleLog(battle manager.Battle) {
 	log.Printf("\x1b[32m[NOTIFY] 次ターンに移行しました -> BattleID: %d, Turn : %d\x1b[0m\n", battle.Info.ID, battle.Turn)
 	log.Printf(
 		"[INFO] 試合情報 -> \x1b[1mBattleID: %d, \x1b[31m自チーム: %d (A %d, T %d), \x1b[34m相手チーム: %d (A %d, T %d)\x1b[0m\n",
-		battle.Info.TeamID, score[0][0]+score[0][1], score[0][0], score[0][1], score[1][0]+score[1][1], score[1][0], score[1][1],
+		battle.Info.ID, score[0][0]+score[0][1], score[0][0], score[0][1], score[1][0]+score[1][1], score[1][0], score[1][1],
 	)
 }
 
