@@ -42,6 +42,7 @@ func httpPostJSON(url string, token string, data string) bool {
 	resp, err := client.Do(req)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", err)
+		return false
 	}
 	return resp.StatusCode == 200
 }
