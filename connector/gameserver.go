@@ -3,7 +3,7 @@ package connector
 import (
 	"encoding/json"
 	"github.com/Yuta1004/procon30-kyogi/config"
-	"log"
+	"github.com/Yuta1004/procon30-kyogi/mylog"
 	"strconv"
 )
 
@@ -106,9 +106,9 @@ func PostActionData(battleID int, token string, actionData string) bool {
 	}
 
 	if result {
-		log.Printf("[INFO] 行動情報送信が正常に完了しました -> Token: %s, BattleID: %d\n", token, battleID)
+		mylog.Info("行動情報送信が正常に完了しました -> Token: %s, BattleID: %d", token, battleID)
 	} else {
-		log.Printf("\x1b[31m[ERROR] 行動情報送信に失敗しました -> POSTACTIONDATA001\x1b[0m\n")
+		mylog.Error("行動情報送信に失敗しました -> POSTACTIONDATA001")
 	}
 	return result
 }
