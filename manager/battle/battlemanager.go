@@ -46,9 +46,8 @@ func managerProcess(token string) {
 			battle.SolverCh = nil
 		}
 
-		// update -> exec solver
-		elapsedTime, elapsedTurn := calcTimeStatus(battle)
-		if 0 <= elapsedTime && 1 <= elapsedTurn && elapsedTurn <= battle.Info.MaxTurn && battle.Turn != elapsedTurn {
+		// update -> exec solver -> relief
+		if checkNeedUpdateBattle(battle) {
 			newerBattle := makeBattleStruct(token, battle.Info.ID)
 			if newerBattle.Turn != battle.Turn {
 				// update battle status
@@ -63,8 +62,6 @@ func managerProcess(token string) {
 				go solver.ExecSolver(newerBattle.SolverCh, newerBattle)
 			}
 		}
-
-		// relief
 		reliefBattle(token, battle)
 	}
 }
@@ -77,9 +74,10 @@ func checkSolver(battle manager.Battle) string {
 	// valid json
 	if err := json.Unmarshal([]byte(solverRes), &tmp); err != nil {
 		mylog.Error("ソルバが正常に終了しませんでした -> BattleID: %d", battle.Info.ID)
-		return "{}"
+		solverRes = ""
+	} else {
+		mylog.Info("ソルバの実行が正常に終了しました -> BattleID: %d", battle.Info.ID)
 	}
-	mylog.Info("ソルバの実行が正常に終了しました -> BattleID: %d", battle.Info.ID)
 	return solverRes
 }
 
