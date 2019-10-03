@@ -20,10 +20,10 @@ func getScore(battle manager.Battle) [][]int {
 	return [][]int{scoreB, scoreA}
 }
 
-func calcTimeStatus(battle manager.Battle) (int, int) {
+func checkNeedUpdateBattle(battle manager.Battle) bool {
 	turnMillis := battle.Info.IntervalMillis + battle.Info.TurnMillis
 	nowUnix := int(time.Now().UnixNano() / 1000000)
 	elapsedTime := nowUnix - battle.DetailInfo.StartedAtUnixTime*1000
 	elapsedTurn := int(elapsedTime/turnMillis) + 1
-	return elapsedTime, elapsedTurn
+	return (0 <= elapsedTime && 1 <= elapsedTurn && elapsedTurn <= battle.Info.MaxTurn && battle.Turn != elapsedTurn)
 }
