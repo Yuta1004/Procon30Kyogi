@@ -69,7 +69,7 @@ func managerProcess(token string) {
 func checkSolver(battle manager.Battle) string {
 	// receive data
 	solverRes := <-battle.SolverCh
-	var tmp []interface{}
+	var tmp interface{}
 
 	// valid json
 	if err := json.Unmarshal([]byte(solverRes), &tmp); err != nil {
