@@ -69,14 +69,6 @@ func managerProcess(token string) {
 	}
 }
 
-func calcTimeStatus(battle manager.Battle) (int, int) {
-	turnMillis := battle.Info.IntervalMillis + battle.Info.TurnMillis
-	nowUnix := int(time.Now().UnixNano() / 1000000)
-	elapsedTime := nowUnix - battle.DetailInfo.StartedAtUnixTime*1000
-	elapsedTurn := int(elapsedTime/turnMillis) + 1
-	return elapsedTime, elapsedTurn
-}
-
 func outBattleLog(battle manager.Battle) {
 	score := getScore(battle)
 	log.Printf("\x1b[32m[NOTIFY] 次ターンに移行しました -> BattleID: %d, Turn : %d\x1b[0m\n", battle.Info.ID, battle.Turn)
