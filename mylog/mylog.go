@@ -2,6 +2,8 @@ package mylog
 
 import (
 	"log"
+	"os"
+	"time"
 )
 
 // Info : タイプInfoのログを出力する
@@ -33,9 +35,10 @@ func Warning(fmt string, args ...interface{}) {
 }
 
 func outlog(header, fmt, footer string, args ...interface{}) {
+	l := log.New(os.Stdout, time.Now().Format("2006/01/02 15:05:04.000 "), 0)
 	if len(args) > 0 {
-		log.Printf(header+fmt+footer, args...)
+		l.Printf(header+fmt+footer, args...)
 	} else {
-		log.Printf(header + fmt + footer)
+		l.Printf(header + fmt + footer)
 	}
 }
