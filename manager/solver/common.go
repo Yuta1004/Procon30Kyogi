@@ -2,7 +2,7 @@ package solver
 
 import (
 	"github.com/Yuta1004/procon30-kyogi/manager"
-	"log"
+	"github.com/Yuta1004/procon30-kyogi/mylog"
 	"os"
 )
 
@@ -13,7 +13,7 @@ func saveJSON(name string, jsonBody []byte) bool {
 	// save json
 	file, err := os.Create("./tmp/" + name + ".json")
 	if err != nil {
-		log.Printf("\x1b[31mソルバ起動準備中にエラーが発生しました -> SAVEJSON\x1b[0m\n")
+		mylog.Error("ソルバ起動準備中にエラーが発生しました -> SAVEJSON")
 		return false
 	}
 	file.Write(jsonBody)

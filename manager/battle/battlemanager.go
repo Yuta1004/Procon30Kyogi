@@ -1,10 +1,11 @@
 package battle
 
 import (
+	"encoding/json"
 	"github.com/Yuta1004/procon30-kyogi/connector"
 	"github.com/Yuta1004/procon30-kyogi/manager"
 	"github.com/Yuta1004/procon30-kyogi/manager/solver"
-	"log"
+	"github.com/Yuta1004/procon30-kyogi/mylog"
 	"time"
 )
 
@@ -15,13 +16,13 @@ func BManagerExec(token string) {
 	// panic handling
 	defer func() {
 		if err := recover(); err != nil {
-			log.Printf("\x1b[31m[ERROR] 回復不可能なエラー(panic)が発生しました! BattleManagerを終了します!\x1b[0m\n")
-			log.Printf("\x1b[31m%s\x1b[0m\n", err)
+			mylog.Error("回復不可能なエラー(panic)が発生しました! BattleManagerを終了します!")
+			mylog.Error("%s", err)
 		}
 	}()
 
 	// setting...
-	log.Printf("[INFO] BattleManager起動...\n")
+	mylog.Info("BattleManager起動...")
 	allBattleDict = make(map[int]manager.Battle)
 	makeAllBattleDict(token)
 
@@ -40,15 +41,13 @@ func managerProcess(token string) {
 	for _, battle := range copyAllBattleDict() {
 		// check solver chan
 		if battle.SolverCh != nil && len(battle.SolverCh) > 0 {
-			result := <-battle.SolverCh
-			log.Printf("[INFO] ソルバの実行が終了しました -> BattleID: %d\n", battle.Info.ID)
-			go connector.PostActionData(battle.Info.ID, token, result)
+			solverRes := checkSolver(battle)
+			go connector.PostActionData(battle.Info.ID, token, solverRes)
 			battle.SolverCh = nil
 		}
 
-		// update -> exec solver
-		elapsedTime, elapsedTurn := calcTimeStatus(battle)
-		if 0 <= elapsedTime && 1 <= elapsedTurn && elapsedTurn <= battle.Info.MaxTurn && battle.Turn != elapsedTurn {
+		// update -> exec solver -> relief
+		if checkNeedUpdateBattle(battle) {
 			newerBattle := makeBattleStruct(token, battle.Info.ID)
 			if newerBattle.Turn != battle.Turn {
 				// update battle status
@@ -63,25 +62,31 @@ func managerProcess(token string) {
 				go solver.ExecSolver(newerBattle.SolverCh, newerBattle)
 			}
 		}
-
-		// relief
 		reliefBattle(token, battle)
 	}
 }
 
-func calcTimeStatus(battle manager.Battle) (int, int) {
-	turnMillis := battle.Info.IntervalMillis + battle.Info.TurnMillis
-	nowUnix := int(time.Now().UnixNano() / 1000000)
-	elapsedTime := nowUnix - battle.DetailInfo.StartedAtUnixTime*1000
-	elapsedTurn := int(elapsedTime/turnMillis) + 1
-	return elapsedTime, elapsedTurn
+func checkSolver(battle manager.Battle) string {
+	// receive data
+	solverRes := <-battle.SolverCh
+	var tmp []interface{}
+
+	// valid json
+	if err := json.Unmarshal([]byte(solverRes), &tmp); err != nil {
+		mylog.Error("ソルバが正常に終了しませんでした -> BattleID: %d", battle.Info.ID)
+		mylog.Error(solverRes)
+		solverRes = ""
+	} else {
+		mylog.Info("ソルバの実行が正常に終了しました -> BattleID: %d", battle.Info.ID)
+	}
+	return solverRes
 }
 
 func outBattleLog(battle manager.Battle) {
 	score := getScore(battle)
-	log.Printf("\x1b[32m[NOTIFY] 次ターンに移行しました -> BattleID: %d, Turn : %d\x1b[0m\n", battle.Info.ID, battle.Turn)
-	log.Printf(
-		"[INFO] 試合情報 -> \x1b[1mBattleID: %d, \x1b[31m自チーム: %d (A %d, T %d), \x1b[34m相手チーム: %d (A %d, T %d)\x1b[0m\n",
+	mylog.Notify("次ターンに移行しました -> BattleID: %d, Turn : %d", battle.Info.ID, battle.Turn)
+	mylog.Info(
+		"[INFO] 試合情報 -> \x1b[1mBattleID: %d, \x1b[31m自チーム: %d (A %d, T %d), \x1b[34m相手チーム: %d (A %d, T %d)",
 		battle.Info.ID, score[0][0]+score[0][1], score[0][0], score[0][1], score[1][0]+score[1][1], score[1][0], score[1][1],
 	)
 }
@@ -89,14 +94,14 @@ func outBattleLog(battle manager.Battle) {
 func reliefBattle(token string, battle manager.Battle) {
 	// relief failed...
 	if battle.ProcessErrCnt >= 5 {
-		log.Printf("\x1b[31m[ERROR] 試合情報の復旧に失敗しました. 該当試合の更新を中断します -> BattleID: %d\x1b[0m\n", battle.Info.ID)
+		mylog.Error("試合情報の復旧に失敗しました. 該当試合の更新を中断します -> BattleID: %d", battle.Info.ID)
 		delete(allBattleDict, battle.Info.ID)
 		return
 	}
 
 	// relief
 	if battle.DetailInfo.StartedAtUnixTime == 0 {
-		log.Printf("\x1b[31m[ERROR] 試合情報の復旧を行います -> BattleID: %d, ErrCnt: %d\x1b[0m\n", battle.Info.ID, battle.ProcessErrCnt+1)
+		mylog.Error("試合情報の復旧を行います -> BattleID: %d, ErrCnt: %d", battle.Info.ID, battle.ProcessErrCnt+1)
 		newerBattle := makeBattleStruct(token, battle.Info.ID)
 		newerBattle.Info = battle.Info
 		newerBattle.ProcessErrCnt = battle.ProcessErrCnt + 1
