@@ -16,3 +16,6 @@ docker-build-base: Dockerfile_Base
 
 docker-build-solver: Dockerfile_Solver
 	docker build -t procon30-solver -f Dockerfile_Solver ./
+
+clean:
+	rm -rf tmp/ procon30_yuge_kyogi_*
