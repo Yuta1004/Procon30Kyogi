@@ -13,8 +13,6 @@ func CUI() {
 	// init variables
 	ch := make(chan rune)
 	inpBuf = make([]rune, 0)
-
-	// start monitor
 	go monitorStdin(ch)
 
 	// mainloop
