@@ -44,13 +44,13 @@ func SetInputArea(msg string) {
 }
 
 func outlog(header, fmtStr, footer string, args ...interface{}) {
-	l := log.New(os.Stdout, "\x1b[5A\x1b[G"+time.Now().Format("2006/01/02 15:05:04.000 "), 0)
+	l := log.New(os.Stdout, "\x1b[2A\x1b[G"+time.Now().Format("2006/01/02 15:05:04.000 "), 0)
 	if len(args) > 0 {
 		l.Printf(header+fmtStr+footer, args...)
 	} else {
 		l.Printf(header + fmtStr + footer)
 	}
-	fmt.Printf("\x1b[G\x1b[K\n\x1b[K\n\x1b[K\n\x1b[K\n\x1b[K\n\x1b[K\x1b")
+	fmt.Printf("\x1b[G\x1b[K\n\x1b[K\n\x1b[K\x1b")
 	outInputLine()
 }
 

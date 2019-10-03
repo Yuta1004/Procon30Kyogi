@@ -10,7 +10,7 @@ import (
 
 func main() {
 	// setting fot mylog
-	for cnt := 0; cnt < 6; cnt++ {
+	for cnt := 0; cnt < 3; cnt++ {
 		fmt.Println()
 	}
 
