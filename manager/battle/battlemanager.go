@@ -1,6 +1,7 @@
 package battle
 
 import (
+	"encoding/json"
 	"github.com/Yuta1004/procon30-kyogi/connector"
 	"github.com/Yuta1004/procon30-kyogi/manager"
 	"github.com/Yuta1004/procon30-kyogi/manager/solver"
@@ -40,9 +41,8 @@ func managerProcess(token string) {
 	for _, battle := range copyAllBattleDict() {
 		// check solver chan
 		if battle.SolverCh != nil && len(battle.SolverCh) > 0 {
-			result := <-battle.SolverCh
-			log.Printf("[INFO] ソルバの実行が終了しました -> BattleID: %d\n", battle.Info.ID)
-			go connector.PostActionData(battle.Info.ID, token, result)
+			solverRes := checkSolver(battle)
+			go connector.PostActionData(battle.Info.ID, token, solverRes)
 			battle.SolverCh = nil
 		}
 
@@ -67,6 +67,20 @@ func managerProcess(token string) {
 		// relief
 		reliefBattle(token, battle)
 	}
+}
+
+func checkSolver(battle manager.Battle) string {
+	// receive data
+	solverRes := <-battle.SolverCh
+	var tmp []interface{}
+
+	// valid json
+	if err := json.Unmarshal([]byte(solverRes), &tmp); err != nil {
+		log.Printf("\x1b[31m[ERROR] ソルバが正常に終了しませんでした -> BattleID: %d\n", battle.Info.ID)
+		return "{}"
+	}
+	log.Printf("[INFO] ソルバの実行が正常に終了しました -> BattleID: %d\n", battle.Info.ID)
+	return solverRes
 }
 
 func outBattleLog(battle manager.Battle) {
