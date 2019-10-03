@@ -7,7 +7,7 @@ import (
 // Info : タイプInfoのログを出力する
 func Info(fmt string, args ...interface{}) {
 	header := "[INFO] "
-	footer := "\n"
+	footer := "\x1b[0m\n"
 	outlog(header, fmt, footer, args...)
 }
 
