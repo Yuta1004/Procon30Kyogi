@@ -13,7 +13,7 @@ var inpBuf []rune
 func CUI() {
 	// init variables
 	ch := make(chan rune)
-	inpBuf = make([]rune, 1024)
+	inpBuf = make([]rune, 0)
 
 	// start monitor
 	go monitorStdin(ch)
@@ -28,7 +28,6 @@ func CUI() {
 		}
 
 		// command
-		mylog.Warning("-%s-", string(inpBuf))
 		switch string(inpBuf) {
 		case "exit":
 			mylog.Info("システムを終了します...")
@@ -37,8 +36,7 @@ func CUI() {
 
 		// clean buf
 		inpBuf = nil
-		inpBuf = make([]rune, 1024)
-		mylog.SetInputArea(string(inpBuf))
+		inpBuf = make([]rune, 0)
 	}
 }
 
@@ -49,12 +47,9 @@ func monitorStdin(ch chan rune) {
 	for {
 		char, key, _ := keyboard.GetKey()
 		switch key {
-		case keyboard.KeyEsc:
-			os.Exit(0)
 		case keyboard.KeyBackspace, keyboard.KeyBackspace2:
 			inpBuf = inpBuf[:len(inpBuf)-1]
 		case keyboard.KeyEnter:
-			inpBuf = append(inpBuf, 0)
 			char = '\n'
 		default:
 			inpBuf = append(inpBuf, char)
