@@ -1,10 +1,13 @@
 package mylog
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"time"
 )
+
+var inpBuf string
 
 // Info : タイプInfoのログを出力する
 func Info(fmt string, args ...interface{}) {
@@ -34,11 +37,23 @@ func Warning(fmt string, args ...interface{}) {
 	outlog(header, fmt, footer, args...)
 }
 
-func outlog(header, fmt, footer string, args ...interface{}) {
-	l := log.New(os.Stdout, time.Now().Format("2006/01/02 15:05:04.000 "), 0)
+// SetInputArea : 入力エリアに表示する文字列をセットする
+func SetInputArea(msg string) {
+	inpBuf = msg
+	outInputLine()
+}
+
+func outlog(header, fmtStr, footer string, args ...interface{}) {
+	l := log.New(os.Stdout, "\x1b[2A\x1b[G"+time.Now().Format("2006/01/02 15:05:04.000 "), 0)
 	if len(args) > 0 {
-		l.Printf(header+fmt+footer, args...)
+		l.Printf(header+fmtStr+footer, args...)
 	} else {
-		l.Printf(header + fmt + footer)
+		l.Printf(header + fmtStr + footer)
 	}
+	fmt.Printf("\x1b[G\x1b[K\n\x1b[K\n\x1b[K\x1b")
+	outInputLine()
+}
+
+func outInputLine() {
+	fmt.Printf("\x1b[K\x1b[G>> %s", inpBuf)
 }
