@@ -42,5 +42,9 @@ func outlog(header, fmtStr, footer string, args ...interface{}) {
 	} else {
 		l.Printf(header + fmtStr + footer)
 	}
-	fmt.Printf("\x1b[G\x1b[K\n\x1b[K\n\x1b[K\n\x1b[K\n\x1b[K\n\x1b[K\x1b[G>> ")
+	fmt.Printf("\x1b[G\x1b[K\n\x1b[K\n\x1b[K\n\x1b[K\n\x1b[K\n\x1b[K\x1b")
+}
+
+func outInputLine(msg string) {
+	fmt.Printf("\x1b[K\x1b[G>> %s", msg)
 }
