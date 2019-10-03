@@ -7,13 +7,13 @@ import (
 	"os"
 )
 
-var inpBuf []byte
+var inpBuf []rune
 
 // CUI : cui
 func CUI() {
 	// init variables
-	ch := make(chan byte)
-	inpBuf = make([]byte, 1024)
+	ch := make(chan rune)
+	inpBuf = make([]rune, 1024)
 
 	// start monitor
 	go monitorStdin(ch)
@@ -23,7 +23,7 @@ func CUI() {
 		// input
 		inp := <-ch
 		mylog.SetInputArea(string(inpBuf))
-		if inp != byte('\n') {
+		if inp != rune('\n') {
 			continue
 		}
 
@@ -37,11 +37,12 @@ func CUI() {
 
 		// clean buf
 		inpBuf = nil
-		inpBuf = make([]byte, 1024)
+		inpBuf = make([]rune, 1024)
+		mylog.SetInputArea(string(inpBuf))
 	}
 }
 
-func monitorStdin(ch chan byte) {
+func monitorStdin(ch chan rune) {
 	keyboard.Open()
 	defer keyboard.Close()
 
@@ -53,10 +54,11 @@ func monitorStdin(ch chan byte) {
 		case keyboard.KeyBackspace, keyboard.KeyBackspace2:
 			inpBuf = inpBuf[:len(inpBuf)-1]
 		case keyboard.KeyEnter:
+			inpBuf = append(inpBuf, 0)
 			char = '\n'
 		default:
-			inpBuf = append(inpBuf, byte(char))
+			inpBuf = append(inpBuf, char)
 		}
-		ch <- byte(char)
+		ch <- char
 	}
 }
