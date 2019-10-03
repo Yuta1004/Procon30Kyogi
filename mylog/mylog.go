@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+var inpBuf string
+
 // Info : タイプInfoのログを出力する
 func Info(fmt string, args ...interface{}) {
 	header := "[INFO] "
@@ -35,6 +37,12 @@ func Warning(fmt string, args ...interface{}) {
 	outlog(header, fmt, footer, args...)
 }
 
+// SetInputArea : 入力エリアに表示する文字列をセットする
+func SetInputArea(msg string) {
+	inpBuf = msg
+	outInputLine()
+}
+
 func outlog(header, fmtStr, footer string, args ...interface{}) {
 	l := log.New(os.Stdout, "\x1b[5A\x1b[G"+time.Now().Format("2006/01/02 15:05:04.000 "), 0)
 	if len(args) > 0 {
@@ -43,8 +51,9 @@ func outlog(header, fmtStr, footer string, args ...interface{}) {
 		l.Printf(header + fmtStr + footer)
 	}
 	fmt.Printf("\x1b[G\x1b[K\n\x1b[K\n\x1b[K\n\x1b[K\n\x1b[K\n\x1b[K\x1b")
+	outInputLine()
 }
 
-func outInputLine(msg string) {
-	fmt.Printf("\x1b[K\x1b[G>> %s", msg)
+func outInputLine() {
+	fmt.Printf("\x1b[K\x1b[G>> %s", inpBuf)
 }
