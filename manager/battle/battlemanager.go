@@ -74,6 +74,7 @@ func checkSolver(battle manager.Battle) string {
 	// valid json
 	if err := json.Unmarshal([]byte(solverRes), &tmp); err != nil {
 		mylog.Error("ソルバが正常に終了しませんでした -> BattleID: %d", battle.Info.ID)
+		mylog.Error(solverRes)
 		solverRes = ""
 	} else {
 		mylog.Info("ソルバの実行が正常に終了しました -> BattleID: %d", battle.Info.ID)

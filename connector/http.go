@@ -17,6 +17,7 @@ func httpGet(url string, token string) []byte {
 	res, err := client.Do(req)
 	if err != nil {
 		mylog.Error("HTTP通信(GET)に失敗しました -> HTTPGET001")
+		mylog.Error(err.Error())
 		return make([]byte, 0)
 	}
 	defer res.Body.Close()
@@ -25,6 +26,7 @@ func httpGet(url string, token string) []byte {
 	resBody, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		mylog.Error("レスポンスの読み取りに失敗しました -> HTTPGET001")
+		mylog.Error(err.Error())
 		return make([]byte, 0)
 	}
 	return resBody
@@ -41,6 +43,7 @@ func httpPostJSON(url string, token string, data string) bool {
 	resp, err := client.Do(req)
 	if err != nil {
 		mylog.Error("HTTP通信(POST)に失敗しました -> HTTPGET001")
+		mylog.Error(err.Error())
 		return false
 	}
 	return resp.StatusCode == 200

@@ -15,6 +15,7 @@ func callContainer(confCont *container.Config, confHost *container.HostConfig, n
 	client, err := client.NewClientWithOpts(client.WithVersion("1.40"))
 	if err != nil {
 		mylog.Error("ソルバ起動中にエラーが発生しました -> CALLCONTAINER001")
+		mylog.Error(err.Error())
 		return "{}"
 	}
 
@@ -23,6 +24,7 @@ func callContainer(confCont *container.Config, confHost *container.HostConfig, n
 	cont, err := client.ContainerCreate(ctx, confCont, confHost, &network.NetworkingConfig{}, name)
 	if err != nil {
 		mylog.Error("ソルバ起動中にエラーが発生しました -> CALLCONTAINER002")
+		mylog.Error(err.Error())
 		return "{}"
 	}
 
@@ -30,6 +32,7 @@ func callContainer(confCont *container.Config, confHost *container.HostConfig, n
 	err = client.ContainerStart(ctx, cont.ID, types.ContainerStartOptions{})
 	if err != nil {
 		mylog.Error("ソルバ起動中にエラーが発生しました -> CALLCONTAINER003")
+		mylog.Error(err.Error())
 		return "{}"
 	}
 	defer client.ContainerRemove(ctx, cont.ID, types.ContainerRemoveOptions{})
@@ -39,6 +42,7 @@ func callContainer(confCont *container.Config, confHost *container.HostConfig, n
 	select {
 	case <-errCh:
 		mylog.Error("ソルバ起動中にエラーが発生しました -> CALLCONTAINER004")
+		mylog.Error(err.Error())
 		return "{}"
 	case <-statusCh:
 	}
@@ -47,6 +51,7 @@ func callContainer(confCont *container.Config, confHost *container.HostConfig, n
 	out, err := client.ContainerLogs(ctx, cont.ID, types.ContainerLogsOptions{ShowStdout: true})
 	if err != nil {
 		mylog.Error("ソルバ実行中にエラーが発生しました -> CALLCONTAINER005")
+		mylog.Error(err.Error())
 		return "{}"
 	}
 	result, _ := ioutil.ReadAll(out)
