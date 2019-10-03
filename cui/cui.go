@@ -3,7 +3,6 @@ package cui
 import (
 	"github.com/Yuta1004/procon30-kyogi/mylog"
 	"github.com/eiannone/keyboard"
-	// "log"
 	"os"
 )
 
@@ -48,7 +47,7 @@ func monitorStdin(ch chan rune) {
 		char, key, _ := keyboard.GetKey()
 		switch key {
 		case keyboard.KeyBackspace, keyboard.KeyBackspace2:
-			inpBuf = inpBuf[:len(inpBuf)-1]
+			inpBuf = inpBuf[:max(len(inpBuf)-1, 0)]
 		case keyboard.KeyEnter:
 			char = '\n'
 		default:
@@ -56,4 +55,11 @@ func monitorStdin(ch chan rune) {
 		}
 		ch <- char
 	}
+}
+
+func max(a, b int) int {
+	if a < b {
+		return b
+	}
+	return a
 }
