@@ -82,15 +82,6 @@ func checkSolver(battle manager.Battle) string {
 	return solverRes
 }
 
-func outBattleLog(battle manager.Battle) {
-	score := getScore(battle)
-	mylog.Notify("次ターンに移行しました -> BattleID: %d, Turn : %d", battle.Info.ID, battle.Turn)
-	mylog.Info(
-		"試合情報 -> \x1b[1mBattleID: %d, \x1b[31m自チーム: %d (A %d, T %d), \x1b[34m相手チーム: %d (A %d, T %d)",
-		battle.Info.ID, score[0][0]+score[0][1], score[0][0], score[0][1], score[1][0]+score[1][1], score[1][0], score[1][1],
-	)
-}
-
 func reliefBattle(token string, battle manager.Battle) {
 	// relief failed...
 	if battle.ProcessErrCnt >= 5 {
