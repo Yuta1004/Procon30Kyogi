@@ -2,6 +2,7 @@ package battle
 
 import (
 	"github.com/Yuta1004/procon30-kyogi/manager"
+	"github.com/Yuta1004/procon30-kyogi/mylog"
 	"time"
 )
 
@@ -26,4 +27,13 @@ func checkNeedUpdateBattle(battle manager.Battle) bool {
 	elapsedTime := nowUnix - battle.DetailInfo.StartedAtUnixTime*1000
 	elapsedTurn := int(elapsedTime/turnMillis) + 1
 	return (0 <= elapsedTime && 1 <= elapsedTurn && elapsedTurn <= battle.Info.MaxTurn && battle.Turn != elapsedTurn)
+}
+
+func outBattleLog(battle manager.Battle) {
+	score := getScore(battle)
+	mylog.Notify("次ターンに移行しました -> BattleID: %d, Turn : %d", battle.Info.ID, battle.Turn)
+	mylog.Info(
+		"試合情報 -> \x1b[1mBattleID: %d, \x1b[31m自チーム: %d (A %d, T %d), \x1b[34m相手チーム: %d (A %d, T %d)",
+		battle.Info.ID, score[0][0]+score[0][1], score[0][0], score[0][1], score[1][0]+score[1][1], score[1][0], score[1][1],
+	)
 }

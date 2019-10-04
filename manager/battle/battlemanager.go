@@ -24,7 +24,7 @@ func BManagerExec(token string) {
 	// setting...
 	mylog.Info("BattleManager起動...")
 	allBattleDict = make(map[int]manager.Battle)
-	makeAllBattleDict(token)
+	MakeAllBattleDict(token)
 
 	// mainloop
 	t := time.NewTicker(500 * time.Millisecond)
@@ -50,15 +50,10 @@ func managerProcess(token string) {
 		if checkNeedUpdateBattle(battle) {
 			newerBattle := makeBattleStruct(token, battle.Info.ID)
 			if newerBattle.Turn != battle.Turn {
-				// update battle status
 				newerBattle.Info = battle.Info
 				newerBattle.ProcessErrCnt = 0
 				allBattleDict[battle.Info.ID] = newerBattle
-
-				// output log
 				outBattleLog(newerBattle)
-
-				// exec solver
 				go solver.ExecSolver(newerBattle.SolverCh, newerBattle)
 			}
 		}
@@ -80,15 +75,6 @@ func checkSolver(battle manager.Battle) string {
 		mylog.Info("ソルバの実行が正常に終了しました -> BattleID: %d", battle.Info.ID)
 	}
 	return solverRes
-}
-
-func outBattleLog(battle manager.Battle) {
-	score := getScore(battle)
-	mylog.Notify("次ターンに移行しました -> BattleID: %d, Turn : %d", battle.Info.ID, battle.Turn)
-	mylog.Info(
-		"試合情報 -> \x1b[1mBattleID: %d, \x1b[31m自チーム: %d (A %d, T %d), \x1b[34m相手チーム: %d (A %d, T %d)",
-		battle.Info.ID, score[0][0]+score[0][1], score[0][0], score[0][1], score[1][0]+score[1][1], score[1][0], score[1][1],
-	)
 }
 
 func reliefBattle(token string, battle manager.Battle) {
