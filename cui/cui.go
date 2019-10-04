@@ -48,6 +48,9 @@ func monitorStdin(ch chan rune) {
 			inpBuf = inpBuf[:max(len(inpBuf)-1, 0)]
 		case keyboard.KeyEnter:
 			char = '\n'
+		case keyboard.KeySpace:
+			char = ' '
+			inpBuf = append(inpBuf, char)
 		default:
 			inpBuf = append(inpBuf, char)
 		}
