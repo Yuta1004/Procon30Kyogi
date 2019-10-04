@@ -24,7 +24,7 @@ func BManagerExec(token string) {
 	// setting...
 	mylog.Info("BattleManager起動...")
 	allBattleDict = make(map[int]manager.Battle)
-	makeAllBattleDict(token)
+	MakeAllBattleDict(token)
 
 	// mainloop
 	t := time.NewTicker(500 * time.Millisecond)
