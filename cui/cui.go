@@ -1,6 +1,8 @@
 package cui
 
 import (
+	"github.com/Yuta1004/procon30-kyogi/config"
+	"github.com/Yuta1004/procon30-kyogi/manager/battle"
 	"github.com/Yuta1004/procon30-kyogi/mylog"
 	"github.com/eiannone/keyboard"
 	"os"
@@ -26,6 +28,11 @@ func CUI() {
 
 		// command
 		switch string(inpBuf) {
+		case "refresh":
+			mylog.Warning("試合情報を再取得します...(更新終了まで操作をしないでください)")
+			conf := config.GetConfigData()
+			battle.MakeAllBattleDict(conf.GameServer.Token)
+
 		case "exit":
 			mylog.Info("システムを終了します...")
 			os.Exit(0)
