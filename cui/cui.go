@@ -19,8 +19,8 @@ func CUI() {
 	for {
 		// input
 		inp := <-ch
-		mylog.SetInputArea(string(inpBuf))
 		if inp != rune('\n') {
+			mylog.SetInputArea(string(inpBuf))
 			continue
 		}
 
@@ -32,8 +32,8 @@ func CUI() {
 		}
 
 		// clean buf
-		inpBuf = nil
 		inpBuf = make([]rune, 0)
+		mylog.SetInputArea(string(inpBuf))
 	}
 }
 
