@@ -55,5 +55,5 @@ func outlog(header, fmtStr, footer string, args ...interface{}) {
 }
 
 func outInputLine() {
-	fmt.Printf("\x1b[K\x1b[G>> %s", inpBuf)
+	fmt.Printf("\x1b[G\x1b[K>> %s", inpBuf)
 }
