@@ -50,15 +50,10 @@ func managerProcess(token string) {
 		if checkNeedUpdateBattle(battle) {
 			newerBattle := makeBattleStruct(token, battle.Info.ID)
 			if newerBattle.Turn != battle.Turn {
-				// update battle status
 				newerBattle.Info = battle.Info
 				newerBattle.ProcessErrCnt = 0
 				allBattleDict[battle.Info.ID] = newerBattle
-
-				// output log
 				outBattleLog(newerBattle)
-
-				// exec solver
 				go solver.ExecSolver(newerBattle.SolverCh, newerBattle)
 			}
 		}
