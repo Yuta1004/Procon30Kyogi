@@ -35,7 +35,7 @@ func CUI() {
 				mylog.Warning("Usage : viewer <BattleID>")
 				break
 			}
-			mylog.Info("ビューワを起動します... -> BattleID : %s\n", command[1])
+			mylog.Info("ビューワを起動します... -> BattleID : %s", command[1])
 
 		case "refresh":
 			mylog.Warning("試合情報を再取得します...(更新終了まで操作をしないでください)")
