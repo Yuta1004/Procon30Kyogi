@@ -6,6 +6,7 @@ import (
 	"github.com/Yuta1004/procon30-kyogi/mylog"
 	"github.com/eiannone/keyboard"
 	"os"
+	"strings"
 )
 
 var inpBuf []rune
@@ -27,7 +28,8 @@ func CUI() {
 		}
 
 		// command
-		switch string(inpBuf) {
+		command := strings.Split(string(inpBuf), " ")
+		switch command[0] {
 		case "refresh":
 			mylog.Warning("試合情報を再取得します...(更新終了まで操作をしないでください)")
 			conf := config.GetConfigData()
