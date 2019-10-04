@@ -22,7 +22,7 @@ func CUI() {
 	for {
 		// input
 		inp := <-ch
-		if inp != rune('\n') {
+		if inp != rune('\n') || len(inpBuf) == 0 {
 			mylog.SetInputArea(string(inpBuf))
 			continue
 		}
@@ -30,6 +30,13 @@ func CUI() {
 		// command
 		command := strings.Split(string(inpBuf), " ")
 		switch command[0] {
+		case "viewer":
+			if len(command) < 2 {
+				mylog.Warning("Usage : viewer <BattleID>")
+				break
+			}
+			mylog.Info("ビューワを起動します... -> BattleID : %s\n", command[1])
+
 		case "refresh":
 			mylog.Warning("試合情報を再取得します...(更新終了まで操作をしないでください)")
 			conf := config.GetConfigData()
@@ -38,6 +45,9 @@ func CUI() {
 		case "exit":
 			mylog.Info("システムを終了します...")
 			os.Exit(0)
+
+		default:
+			mylog.Warning("定義されていないコマンドです -> %s", command[0])
 		}
 
 		// clean buf
