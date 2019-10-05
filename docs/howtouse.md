@@ -17,7 +17,7 @@ $ brew cask install docker
 
 ```
 // インストール確認
-$ docker --versionnbijj
+$ docker --version
 ```
 
 インストール確認後、Dockerを起動する
@@ -97,6 +97,14 @@ $ ./procon30_yuge_kyogi_darwin
 
 マスタ実行中にコマンドを入力することで動作指示が可能
 
+#### token \<Token\>
+
+トークン変更
+
+#### solver \<SolverImage\>
+
+使用するソルバイメージを変更
+
 #### viewer \<BattleID\>
 
 ビューワ起動
@@ -105,6 +113,6 @@ $ ./procon30_yuge_kyogi_darwin
 
 試合情報再取得
 
-#### exit
+#### exit, q
 
 マスタ終了
