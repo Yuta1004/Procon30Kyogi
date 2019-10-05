@@ -44,7 +44,7 @@ func SetInputArea(msg string) {
 }
 
 func outlog(header, fmtStr, footer string, args ...interface{}) {
-	l := log.New(os.Stdout, "\x1b[2A\x1b[G"+time.Now().Format("2006/01/02 15:05:04.000 "), 0)
+	l := log.New(os.Stdout, "\x1b[2A\x1b[G"+time.Now().Format("2006/01/02 15:04:05.000 "), 0)
 	if len(args) > 0 {
 		l.Printf(header+fmtStr+footer, args...)
 	} else {

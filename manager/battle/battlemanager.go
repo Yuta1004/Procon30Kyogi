@@ -41,27 +41,30 @@ func managerProcess(token string) {
 	for _, battle := range copyAllBattleDict() {
 		// check solver chan
 		if battle.SolverCh != nil && len(battle.SolverCh) > 0 {
-			solverRes := checkSolver(battle)
-			go connector.PostActionData(battle.Info.ID, token, solverRes)
+			if ok, solverRes := checkSolver(battle); ok {
+				go connector.PostActionData(battle.Info.ID, token, solverRes)
+			}
 			battle.SolverCh = nil
 		}
 
 		// update -> exec solver -> relief
-		if checkNeedUpdateBattle(battle) {
+		if doUpdate, elapsedTurn := checkNeedUpdateBattle(battle); doUpdate {
 			newerBattle := makeBattleStruct(token, battle.Info.ID)
 			if newerBattle.Turn != battle.Turn {
 				newerBattle.Info = battle.Info
 				newerBattle.ProcessErrCnt = 0
 				allBattleDict[battle.Info.ID] = newerBattle
 				outBattleLog(newerBattle)
-				go solver.ExecSolver(newerBattle.SolverCh, newerBattle)
+				if elapsedTurn <= newerBattle.Turn {
+					go solver.ExecSolver(newerBattle.SolverCh, newerBattle)
+				}
 			}
 		}
 		reliefBattle(token, battle)
 	}
 }
 
-func checkSolver(battle manager.Battle) string {
+func checkSolver(battle manager.Battle) (bool, string) {
 	// receive data
 	solverRes := <-battle.SolverCh
 	var tmp interface{}
@@ -70,11 +73,11 @@ func checkSolver(battle manager.Battle) string {
 	if err := json.Unmarshal([]byte(solverRes), &tmp); err != nil {
 		mylog.Error("ソルバが正常に終了しませんでした -> BattleID: %d", battle.Info.ID)
 		mylog.Error(solverRes)
-		solverRes = ""
-	} else {
-		mylog.Info("ソルバの実行が正常に終了しました -> BattleID: %d", battle.Info.ID)
+		return false, ""
 	}
-	return solverRes
+
+	mylog.Info("ソルバの実行が正常に終了しました -> BattleID: %d", battle.Info.ID)
+	return true, solverRes
 }
 
 func reliefBattle(token string, battle manager.Battle) {
