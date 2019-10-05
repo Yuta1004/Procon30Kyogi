@@ -22,5 +22,14 @@ docker-build-base: Dockerfile_Base
 docker-build-solver: Dockerfile_Solver
 	docker build -t $(SOLVER_IMAGE) --build-arg SOURCE_PY=$(SOURCE_PY) -f Dockerfile_Solver ./
 
+dist:
+	mkdir dist
+	make build
+	mv procon30_yuge_kyogi_* dist
+	cp config.toml dist
+	cp Dockerfile_* dist
+	cp Makefile dist
+	cp -r docs dist
+
 clean:
 	rm -rf tmp/ procon30_yuge_kyogi_*
