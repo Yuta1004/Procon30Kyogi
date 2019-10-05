@@ -5,10 +5,10 @@
 ### Docker
 
 ```
-// HomeBrew更新
+/* HomeBrew更新 */
 $ brew update
 
-// Dockerインストール
+/* Dockerインストール */
 $ brew install docker
 $ brew cask install docker
 ```
@@ -16,15 +16,15 @@ $ brew cask install docker
 下のコマンドを実行してバージョン情報が出力されればOK  
 
 ```
-// インストール確認
-$ docker --versionnbijj
+/* インストール確認 */
+$ docker --version
 ```
 
 インストール確認後、Dockerを起動する
 Launchpadから起動してもOK
 
 ```
-// Docker起動
+/* Docker起動 */
 $ open /Applications/Docker.app
 ```
 
@@ -43,7 +43,6 @@ $ open /Applications/Docker.app
 ### ソルバ
 
 マスタを展開したディレクトリにソルバを配置する  
-**ファイル名を `solver.py` にすること**
 
 ### Dockerイメージ
 
@@ -51,14 +50,21 @@ $ open /Applications/Docker.app
 実行時間目安 : 3~4分
 
 ```
-// Dockerイメージセットアップ
-$ make docker-build
+/* ベースイメージ */
+$ make docker-build-base
+
+/* ソルバイメージ */
+$ make docekr-build-solver SOLVER_IMAGE=<image> SOURCE_PY=<solver>
+
+// <image> = procon30-solver:***
+// <solver> = ソルバのファイル名
+// 例: SOLVER_IMAGE=procon30-solver:test SOURCE_PY=solver.py
 ```
 
 実行終了後に下のコマンドを実行し `procon30-sovler` が存在するか確認する
 
 ```
-// Dockerイメージ表示
+/* Dockerイメージ表示 */
 $ docker images
 REPOSITORY            TAG                    IMAGE ID            CREATED             SIZE
 procon30-solver       latest                 3f14358ade7b        56 minutes ago      491MB
@@ -84,7 +90,7 @@ image = "procon30-solver" <- 変更しない
 下のコマンドを実行する
 
 ```
-// マスタ実行(MacOS)
+/* マスタ実行(MacOS) */
 $ ./procon30_yuge_kyogi_darwin
 ```
 
@@ -97,6 +103,14 @@ $ ./procon30_yuge_kyogi_darwin
 
 マスタ実行中にコマンドを入力することで動作指示が可能
 
+#### token \<Token\>
+
+トークン変更
+
+#### solver \<SolverImage\>
+
+使用するソルバイメージを変更
+
 #### viewer \<BattleID\>
 
 ビューワ起動
@@ -105,6 +119,6 @@ $ ./procon30_yuge_kyogi_darwin
 
 試合情報再取得
 
-#### exit
+#### exit, q
 
 マスタ終了
