@@ -10,3 +10,11 @@ func TestGetConfigData(t *testing.T) {
 		t.Errorf("Cannot read config.toml")
 	}
 }
+
+func TestSetConfigData(t *testing.T) {
+	SetConfigData(Config{GameServer: GameServer{URL: "test"}})
+	config := GetConfigData()
+	if config.GameServer.URL != "test" {
+		t.Fail()
+	}
+}

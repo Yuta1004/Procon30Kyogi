@@ -38,3 +38,8 @@ func GetConfigData() *Config {
 	}
 	return &config
 }
+
+// SetConfigData : 設定情報を新しくセットする
+func SetConfigData(conf Config) {
+	config = conf
+}
