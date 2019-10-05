@@ -42,7 +42,7 @@ func ExecSolver(ch chan string, battle manager.Battle) {
 		Cmd: []string{
 			"/bin/sh", "-c",
 			fmt.Sprintf(
-				"echo \"{}\" > /tmp/output.json && timeout %d ./solver.py %s %s %d %d %d %d %d %d && cat %s",
+				"echo \"{}\" > /tmp/output.json && timeout %d ./solver.py %s %s %d %d %d %d %d %d 1>/dev/null && cat %s",
 				execTimeLim, jsonIn, jsonOut, battleID, myID, opponentID, maxTurn, execTimeLim*1000, memLim, jsonOut,
 			),
 		},
