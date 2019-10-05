@@ -1,5 +1,6 @@
 build:
 	make build-darwin
+	make build-linux
 
 build-darwin: main.go
 	env GOOS=darwin GOARCH=amd64 go build -x -o procon30_yuge_kyogi_darwin main.go
