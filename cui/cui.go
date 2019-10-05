@@ -4,7 +4,6 @@ import (
 	"github.com/Yuta1004/procon30-kyogi/config"
 	"github.com/Yuta1004/procon30-kyogi/manager/battle"
 	"github.com/Yuta1004/procon30-kyogi/mylog"
-	"github.com/eiannone/keyboard"
 	"os"
 	"strings"
 )
@@ -29,26 +28,7 @@ func CUI() {
 
 		// command
 		command := strings.Split(string(inpBuf), " ")
-		switch command[0] {
-		case "viewer":
-			if len(command) < 2 {
-				mylog.Warning("Usage : viewer <BattleID>")
-				break
-			}
-			mylog.Info("ビューワを起動します... -> BattleID : %s", command[1])
-
-		case "refresh":
-			mylog.Warning("試合情報を再取得します...(更新終了まで操作をしないでください)")
-			conf := config.GetConfigData()
-			battle.MakeAllBattleDict(conf.GameServer.Token)
-
-		case "exit":
-			mylog.Info("システムを終了します...")
-			os.Exit(0)
-
-		default:
-			mylog.Warning("定義されていないコマンドです -> %s", command[0])
-		}
+		execCommand(command...)
 
 		// clean buf
 		inpBuf = make([]rune, 0)
@@ -56,24 +36,48 @@ func CUI() {
 	}
 }
 
-func monitorStdin(ch chan rune) {
-	keyboard.Open()
-	defer keyboard.Close()
-
-	for {
-		char, key, _ := keyboard.GetKey()
-		switch key {
-		case keyboard.KeyBackspace, keyboard.KeyBackspace2:
-			inpBuf = inpBuf[:max(len(inpBuf)-1, 0)]
-		case keyboard.KeyEnter:
-			char = '\n'
-		case keyboard.KeySpace:
-			char = ' '
-			inpBuf = append(inpBuf, char)
-		default:
-			inpBuf = append(inpBuf, char)
+func execCommand(command ...string) {
+	switch command[0] {
+	case "viewer":
+		if len(command) < 2 {
+			mylog.Warning("Usage : viewer <BattleID>")
+			return
 		}
-		ch <- char
+		mylog.Notify("ビューワを起動します... -> BattleID : %s", command[1])
+
+	case "solver":
+		if len(command) < 2 {
+			mylog.Warning("Usage : solver <SolverImage>")
+			return
+		}
+		conf := config.GetConfigData()
+		conf.Solver.Image = command[1]
+		config.SetConfigData(*conf)
+		mylog.Notify("使用するソルバイメージを変更しました -> %s", command[1])
+
+	case "token":
+		if len(command) < 2 {
+			mylog.Warning("Usage : token <Token>")
+			return
+		}
+		conf := config.GetConfigData()
+		conf.GameServer.Token = command[1]
+		config.SetConfigData(*conf)
+		mylog.Notify("使用するトークンを変更しました -> %s", command[1])
+
+	case "refresh":
+		mylog.Warning("試合情報を再取得します...(更新終了まで操作をしないでください)")
+		conf := config.GetConfigData()
+		battle.MakeAllBattleDict(conf.GameServer.Token)
+
+	case "q":
+		fallthrough
+	case "exit":
+		mylog.Info("システムを終了します...")
+		os.Exit(0)
+
+	default:
+		mylog.Warning("定義されていないコマンドです -> %s", command[0])
 	}
 }
 
