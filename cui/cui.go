@@ -41,9 +41,19 @@ func execCommand(command ...string) {
 	case "viewer":
 		if len(command) < 2 {
 			mylog.Warning("Usage : viewer <BattleID>")
-			break
+			return
 		}
 		mylog.Info("ビューワを起動します... -> BattleID : %s", command[1])
+
+	case "solver":
+		if len(command) < 2 {
+			mylog.Warning("Usage : solver <SolverImage>")
+			return
+		}
+		conf := config.GetConfigData()
+		conf.Solver.Image = command[1]
+		config.SetConfigData(*conf)
+		mylog.Notify("使用するソルバイメージを変更しました -> %s", command[1])
 
 	case "refresh":
 		mylog.Warning("試合情報を再取得します...(更新終了まで操作をしないでください)")
