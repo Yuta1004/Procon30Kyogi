@@ -1,3 +1,4 @@
+SOURCE_PY=solver.py
 SOLVER_IMAGE = procon30-solver
 
 
@@ -19,7 +20,7 @@ docker-build-base: Dockerfile_Base
 	docker build -t alpine:procon30-solver-base -f Dockerfile_Base ./
 
 docker-build-solver: Dockerfile_Solver
-	docker build -t $(SOLVER_IMAGE) -f Dockerfile_Solver ./
+	docker build -t $(SOLVER_IMAGE) --build-arg SOURCE_PY=$(SOURCE_PY) -f Dockerfile_Solver ./
 
 clean:
 	rm -rf tmp/ procon30_yuge_kyogi_*
