@@ -55,6 +55,16 @@ func execCommand(command ...string) {
 		config.SetConfigData(*conf)
 		mylog.Notify("使用するソルバイメージを変更しました -> %s", command[1])
 
+	case "token":
+		if len(command) < 2 {
+			mylog.Warning("Usage : token <Token>")
+			return
+		}
+		conf := config.GetConfigData()
+		conf.GameServer.Token = command[1]
+		config.SetConfigData(*conf)
+		mylog.Notify("使用するトークンを変更しました -> %s", command[1])
+
 	case "refresh":
 		mylog.Warning("試合情報を再取得します...(更新終了まで操作をしないでください)")
 		conf := config.GetConfigData()
