@@ -47,14 +47,16 @@ func managerProcess(token string) {
 		}
 
 		// update -> exec solver -> relief
-		if checkNeedUpdateBattle(battle) {
+		if doUpdate, elapsedTurn := checkNeedUpdateBattle(battle); doUpdate {
 			newerBattle := makeBattleStruct(token, battle.Info.ID)
 			if newerBattle.Turn != battle.Turn {
 				newerBattle.Info = battle.Info
 				newerBattle.ProcessErrCnt = 0
 				allBattleDict[battle.Info.ID] = newerBattle
 				outBattleLog(newerBattle)
-				go solver.ExecSolver(newerBattle.SolverCh, newerBattle)
+				if elapsedTurn <= newerBattle.Turn {
+					go solver.ExecSolver(newerBattle.SolverCh, newerBattle)
+				}
 			}
 		}
 		reliefBattle(token, battle)

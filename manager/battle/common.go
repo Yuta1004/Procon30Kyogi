@@ -21,12 +21,13 @@ func getScore(battle manager.Battle) [][]int {
 	return [][]int{scoreB, scoreA}
 }
 
-func checkNeedUpdateBattle(battle manager.Battle) bool {
+func checkNeedUpdateBattle(battle manager.Battle) (bool, int) {
 	turnMillis := battle.Info.IntervalMillis + battle.Info.TurnMillis
 	nowUnix := int(time.Now().UnixNano() / 1000000)
 	elapsedTime := nowUnix - battle.DetailInfo.StartedAtUnixTime*1000
 	elapsedTurn := int(elapsedTime/turnMillis) + 1
-	return (0 <= elapsedTime && 1 <= elapsedTurn && elapsedTurn <= battle.Info.MaxTurn && battle.Turn != elapsedTurn)
+	return (0 <= elapsedTime && 1 <= elapsedTurn && elapsedTurn <= battle.Info.MaxTurn+1 && battle.Turn != elapsedTurn),
+		elapsedTurn
 }
 
 func outBattleLog(battle manager.Battle) {
