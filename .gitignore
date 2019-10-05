@@ -2,5 +2,6 @@ config.toml
 solver.py
 
 tmp/
+dist/
 
 procon30_yuge_kyogi*
