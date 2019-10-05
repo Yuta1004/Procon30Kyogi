@@ -4,7 +4,6 @@ import (
 	"github.com/Yuta1004/procon30-kyogi/config"
 	"github.com/Yuta1004/procon30-kyogi/manager/battle"
 	"github.com/Yuta1004/procon30-kyogi/mylog"
-	"github.com/eiannone/keyboard"
 	"os"
 	"strings"
 )
@@ -53,27 +52,6 @@ func CUI() {
 		// clean buf
 		inpBuf = make([]rune, 0)
 		mylog.SetInputArea(string(inpBuf))
-	}
-}
-
-func monitorStdin(ch chan rune) {
-	keyboard.Open()
-	defer keyboard.Close()
-
-	for {
-		char, key, _ := keyboard.GetKey()
-		switch key {
-		case keyboard.KeyBackspace, keyboard.KeyBackspace2:
-			inpBuf = inpBuf[:max(len(inpBuf)-1, 0)]
-		case keyboard.KeyEnter:
-			char = '\n'
-		case keyboard.KeySpace:
-			char = ' '
-			inpBuf = append(inpBuf, char)
-		default:
-			inpBuf = append(inpBuf, char)
-		}
-		ch <- char
 	}
 }
 
