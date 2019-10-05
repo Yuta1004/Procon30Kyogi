@@ -43,7 +43,7 @@ func execCommand(command ...string) {
 			mylog.Warning("Usage : viewer <BattleID>")
 			return
 		}
-		mylog.Info("ビューワを起動します... -> BattleID : %s", command[1])
+		mylog.Notify("ビューワを起動します... -> BattleID : %s", command[1])
 
 	case "solver":
 		if len(command) < 2 {
