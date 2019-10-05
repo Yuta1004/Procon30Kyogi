@@ -70,6 +70,8 @@ func execCommand(command ...string) {
 		conf := config.GetConfigData()
 		battle.MakeAllBattleDict(conf.GameServer.Token)
 
+	case "q":
+		fallthrough
 	case "exit":
 		mylog.Info("システムを終了します...")
 		os.Exit(0)
