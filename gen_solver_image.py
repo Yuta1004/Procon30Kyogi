@@ -8,8 +8,8 @@ def make_base_image():
     try:
         subprocess.run(["make", "docker-build-base"])
     except subprocess.CalledProcessError:
-        print("  -> ベースイメージ作成に失敗しました")
-        print("  -> プログラムを終了します")
+        error("ベースイメージ作成に失敗しました")
+        error("プログラムを終了します")
         exit(1)
 
 
@@ -24,8 +24,8 @@ def make_solver_image(solver_path):
         subprocess.run(["make", "docker-build-solver",
                        "SOURCE_PY="+str(solver_path), "SOLVER_IMAGE="+str(img_name)])
     except subprocess.CalledProcessError:
-        print("  -> ソルバイメージ作成に失敗しました")
-        print("  -> プログラムを終了します")
+        error("ソルバイメージ作成に失敗しました")
+        error("プログラムを終了します")
         exit(1)
 
 
@@ -36,24 +36,33 @@ def get_solver_list():
 
 def check_path(path):
     if not os.path.exists(path):
-        print("   -> " + str(path) + "が存在しません")
-        print("   -> プログラムを終了します")
+        error(str(path) + "が存在しません")
+        error("プログラムを終了します")
         exit(1)
 
 
-def main():
-    print("Step1 : ソルバプログラムを探しています...")
-    solver_list = get_solver_list()
-    print("  -> " + str(len(solver_list)) + "つのソルバプログラムが見つかりました\n")
+def info(msg):
+    print("\033[32m\033[1m[INFO] " + msg + "\033[0m")
 
-    print("Step2 : ベースイメージを生成しています...")
+
+def error(msg):
+    print("\033[31m[ERROR] " + msg + "\033[0m")
+
+
+def main():
+    info("ソルバプログラムを探しています...")
+    solver_list = get_solver_list()
+    info(str(len(solver_list)) + "つのソルバプログラムが見つかりました\n")
+
+    info("ベースイメージを生成しています...")
     make_base_image()
     print()
 
-    print("Step3 : ソルバイメージを作成しています...")
+    info("ソルバイメージを作成しています...")
     for solver_path in solver_list:
         make_solver_image(solver_path)
         print()
+    info("ソルバイメージ生成が完了しました")
 
 
 if __name__ == "__main__":
