@@ -13,14 +13,14 @@ $ brew install docker
 $ brew cask install docker
 ```
 
-下のコマンドを実行してバージョン情報が出力されればOK  
+下のコマンドを実行してバージョン情報が出力されればOK
 
 ```
 /* インストール確認 */
 $ docker --version
 ```
 
-インストール確認後、Dockerを起動する
+インストール確認後、Dockerを起動する  
 Launchpadから起動してもOK
 
 ```
@@ -36,13 +36,9 @@ $ open /Applications/Docker.app
 
 マスタ実行ファイル, 設定ファイルをダウンロードする
 
-[Google Drive](https://drive.google.com/drive/folders/14YnVFhW6lRltP7_dhXOrQTG1WVVDBkUT?usp=sharing)  
+[Google Drive](https://drive.google.com/drive/folders/14YnVFhW6lRltP7_dhXOrQTG1WVVDBkUT?usp=sharing)
 
-ダウンロードしたzipファイルは任意のディレクトリに展開する  
-
-### ソルバ
-
-マスタを展開したディレクトリにソルバを配置する  
+ダウンロードしたzipファイルは任意のディレクトリに展開する
 
 ### Dockerイメージ
 
@@ -50,21 +46,14 @@ $ open /Applications/Docker.app
 実行時間目安 : 3~4分
 
 ```
-/* ベースイメージ */
-$ make docker-build-base
-
-/* ソルバイメージ */
-$ make docekr-build-solver SOLVER_IMAGE=<image> SOURCE_PY=<solver>
-
-// <image> = procon30-solver:***
-// <solver> = ソルバのファイル名
-// 例: SOLVER_IMAGE=procon30-solver:test SOURCE_PY=solver.py
+/* ソルバイメージ作成 */
+make docker-build
 ```
 
 実行終了後に下のコマンドを実行し `procon30-sovler` が存在するか確認する
 
 ```
-/* Dockerイメージ表示 */
+/* イメージ一覧表示 */
 $ docker images
 REPOSITORY            TAG                    IMAGE ID            CREATED             SIZE
 procon30-solver       latest                 3f14358ade7b        56 minutes ago      491MB
