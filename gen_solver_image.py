@@ -67,7 +67,7 @@ def main():
     info(str(len(solver_list)) + "つのソルバプログラムが見つかりました\n")
 
     # Step2
-    info("ベースイメージを生成しています...")
+    info("ベースイメージを作成しています...")
     make_base_image()
     print()
 
@@ -76,7 +76,7 @@ def main():
     for solver_path in solver_list:
         make_solver_image(solver_path)
         print()
-    info("ソルバイメージ生成が完了しました")
+    info("ソルバイメージ作成が完了しました")
 
 
 if __name__ == "__main__":
