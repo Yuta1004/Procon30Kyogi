@@ -18,6 +18,7 @@ def make_base_image():
 ## solver_path : ソルバプログラムのパス
 def make_solver_image(solver_path):
     # Format : ./~~/~~/solver_ver1.0.py
+    check_path(solver_path)
     img_name = solver_path.split("/")[-1]                   # ファイル名
     img_name = img_name.replace(".py", "").split("_")[-1]   # バージョン
     img_name = img_name.replace(".", "")                     # .を消す
