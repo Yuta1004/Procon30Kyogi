@@ -11,6 +11,7 @@ def make_solver_image(solver_path):
 
 
 def get_solver_list():
+    check_path("solvers/")
     return glob.glob("./solvers/*/solver_*.py")
 
 
