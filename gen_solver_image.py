@@ -1,9 +1,16 @@
 import os
 import glob
+import subprocess
 
 
 def make_base_image():
     check_path("Makefile")
+    try:
+        subprocess.run(["make", "docker-build-base"])
+    except subprocess.CalledProcessError:
+        print("  -> ベースイメージ作成に失敗しました")
+        print("  -> プログラムを終了します")
+        exit(1)
 
 
 def make_solver_image(solver_path):
