@@ -9,11 +9,15 @@ RUN     echo "[Info] Start Build..." && \
                 gcc \
                 g++ \
                 make \
-                musl \
                 musl-dev \
-                linux-headers \
                 gfortran \
                 openblas-dev && \
         echo "[Info] Insall Python libaries..." && \
         pip3 install --upgrade pip && \
-        pip3 install numpy
+        pip3 install numpy && \
+        echo "[Info] Clean up..." && \
+        apk del \
+                g++ \
+                gfortran \
+                musl-dev \
+                make

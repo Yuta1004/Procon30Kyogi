@@ -3,5 +3,6 @@ solver.py
 
 tmp/
 dist/
+solvers/
 
 procon30_yuge_kyogi*
