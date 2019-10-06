@@ -3,7 +3,7 @@ import glob
 
 
 def make_base_image():
-    pass
+    check_path("Makefile")
 
 
 def make_solver_image(solver_path):
@@ -12,6 +12,13 @@ def make_solver_image(solver_path):
 
 def get_solver_list():
     return glob.glob("./solvers/*/solver_*.py")
+
+
+def check_path(path):
+    if not os.path.exists(path):
+        print("   -> " + str(path) + "が存在しません")
+        print("   -> プログラムを終了します")
+        exit(1)
 
 
 def main():
