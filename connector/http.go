@@ -46,5 +46,5 @@ func httpPostJSON(url string, token string, data string) bool {
 		mylog.Error(err.Error())
 		return false
 	}
-	return resp.StatusCode == 200
+	return resp.StatusCode/100 == 2
 }
