@@ -33,6 +33,7 @@ func TestConnector(t *testing.T) {
 	// do test
 	testGetAllBattle(t, token)
 	testGetBattleDetail(t, token)
+	testPostActionData(t, token)
 }
 
 // GetAllBattleのテスト
@@ -80,5 +81,13 @@ func testGetBattleDetail(t *testing.T, token string) {
 	}
 	if battleDetailInfo.Turn != 2 {
 		t.Fatal("Error: testGetBattleDetail004")
+	}
+}
+
+func testPostActionData(t *testing.T, token string) {
+	os.Chdir(rootPath)
+	actionData := "{\"actions\":[{\"agentID\": 2, \"dx\": 1, \"dy\": 1, \"type\": \"move\"}, {\"agentID\": 3, \"dx\": 1, \"dy\": 1, \"type\": \"move\"}]}"
+	if result := PostActionData(1, token, actionData); !result {
+		t.Fail()
 	}
 }
