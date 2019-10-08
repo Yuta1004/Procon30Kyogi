@@ -115,8 +115,16 @@ func PostActionData(battleID int, token string, actionData string) bool {
 
 // CheckToken : トークンが正しいか問い合わせる
 func CheckToken(token string) {
+	// request
 	conf := config.GetConfigData()
 	url := conf.GameServer.URL + "/ping"
 	res := httpGet(url, token)
-	mylog.Notify("トークン検証結果: %s", res)
+
+	// check token
+	var resJSON interface{}
+	if err := json.Unmarshal(res, &resJSON); err != nil {
+		mylog.Error("トークン検証に失敗しました")
+		return
+	}
+	mylog.Notify("トークン検証結果: %s (%s)", resJSON.(map[string]interface{})["status"].(string), conf.GameServer.Token)
 }
