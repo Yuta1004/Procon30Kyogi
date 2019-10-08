@@ -59,8 +59,8 @@ func GetAllBattle(token string) *[]BattleInfo {
 	var battleInfo []BattleInfo
 	for retryCnt := 3; retryCnt > 0; retryCnt-- {
 		// get data
-		config := config.GetConfigData()
-		reqURL := config.GameServer.URL + "/matches"
+		conf := config.GetConfigData()
+		reqURL := conf.GameServer.URL + "/matches"
 		resBody := httpGet(reqURL, token)
 
 		// json unmarshal
@@ -77,9 +77,9 @@ func GetBattleDetail(battleID int, token string) BattleDetailInfo {
 	var battleDetailInfo BattleDetailInfo
 	for retryCnt := 3; retryCnt > 0; retryCnt-- {
 		// get data
-		config := config.GetConfigData()
+		conf := config.GetConfigData()
 		battleIDStr := strconv.Itoa(battleID)
-		reqURL := config.GameServer.URL + "/matches/" + battleIDStr
+		reqURL := conf.GameServer.URL + "/matches/" + battleIDStr
 		resBody := httpGet(reqURL, token)
 
 		// json unmarshal
@@ -95,9 +95,9 @@ func GetBattleDetail(battleID int, token string) BattleDetailInfo {
 func PostActionData(battleID int, token string, actionData string) bool {
 	result := false
 	for retryCnt := 3; retryCnt > 0; retryCnt-- {
-		config := config.GetConfigData()
+		conf := config.GetConfigData()
 		battleIDStr := strconv.Itoa(battleID)
-		reqURL := config.GameServer.URL + "/matches/" + battleIDStr + "/action"
+		reqURL := conf.GameServer.URL + "/matches/" + battleIDStr + "/action"
 		result = httpPostJSON(reqURL, token, actionData)
 		if !result {
 			continue
@@ -111,4 +111,20 @@ func PostActionData(battleID int, token string, actionData string) bool {
 		mylog.Error("行動情報送信に失敗しました -> POSTACTIONDATA001")
 	}
 	return result
+}
+
+// CheckToken : トークンが正しいか問い合わせる
+func CheckToken(token string) {
+	// request
+	conf := config.GetConfigData()
+	url := conf.GameServer.URL + "/ping"
+	res := httpGet(url, token)
+
+	// check token
+	var resJSON interface{}
+	if err := json.Unmarshal(res, &resJSON); err != nil {
+		mylog.Error("トークン検証に失敗しました")
+		return
+	}
+	mylog.Notify("トークン検証結果: %s (%s)", resJSON.(map[string]interface{})["status"].(string), conf.GameServer.Token)
 }

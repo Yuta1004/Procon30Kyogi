@@ -2,6 +2,7 @@ package cui
 
 import (
 	"github.com/Yuta1004/procon30-kyogi/config"
+	"github.com/Yuta1004/procon30-kyogi/connector"
 	"github.com/Yuta1004/procon30-kyogi/manager/battle"
 	"github.com/Yuta1004/procon30-kyogi/mylog"
 	"os"
@@ -64,6 +65,18 @@ func execCommand(command ...string) {
 		conf.GameServer.Token = command[1]
 		config.SetConfigData(*conf)
 		mylog.Notify("使用するトークンを変更しました -> %s", command[1])
+
+	case "check":
+		conf := config.GetConfigData()
+		connector.CheckToken(conf.GameServer.Token)
+
+	case "config":
+		config := config.GetConfigData()
+		mylog.Notify("\x1b[1m----- 現在の設定状況 -----")
+		mylog.Notify("ゲームサーバURL: %s", config.GameServer.URL)
+		mylog.Notify("トークン: %s", config.GameServer.Token)
+		mylog.Notify("ソルバイメージ: %s", config.Solver.Image)
+		mylog.Notify("\x1b[1m------------------------")
 
 	case "refresh":
 		mylog.Warning("試合情報を再取得します...(更新終了まで操作をしないでください)")
