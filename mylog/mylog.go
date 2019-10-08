@@ -23,16 +23,16 @@ func Error(fmt string, args ...interface{}) {
 	outlog(header, fmt, footer, args...)
 }
 
-// Notify : タイプNotifyのログを出力する
+// Notify : タイプNoticeのログを出力する
 func Notify(fmt string, args ...interface{}) {
-	header := "\x1b[32m[NOTIFY] "
+	header := "\x1b[32m[NOTICE] "
 	footer := "\x1b[0m\n"
 	outlog(header, fmt, footer, args...)
 }
 
 // Warning : タイプWarningのログを表示する
 func Warning(fmt string, args ...interface{}) {
-	header := "\x1b[33m[WARNING] "
+	header := "\x1b[33m[WARN] "
 	footer := "\x1b[0m\n"
 	outlog(header, fmt, footer, args...)
 }
