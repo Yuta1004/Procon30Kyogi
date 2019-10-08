@@ -5,7 +5,7 @@ import (
 	"github.com/Yuta1004/procon30-kyogi/config"
 	"github.com/Yuta1004/procon30-kyogi/cui"
 	"github.com/Yuta1004/procon30-kyogi/manager/battle"
-	"log"
+	"github.com/Yuta1004/procon30-kyogi/mylog"
 )
 
 func main() {
@@ -21,6 +21,6 @@ func main() {
 	conf := config.GetConfigData()
 	for {
 		battle.BManagerExec(conf.GameServer.Token)
-		log.Printf("\x1b[32m[NOIFY] BattleManagerを再起動します...\x1b[0m\n")
+		mylog.Notify("BattleManagerを再起動します...")
 	}
 }
