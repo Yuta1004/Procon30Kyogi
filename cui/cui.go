@@ -65,6 +65,14 @@ func execCommand(command ...string) {
 		config.SetConfigData(*conf)
 		mylog.Notify("使用するトークンを変更しました -> %s", command[1])
 
+	case "config":
+		config := config.GetConfigData()
+		mylog.Notify("\x1b[1m----- 現在の設定状況 -----")
+		mylog.Notify("ゲームサーバURL: %s", config.GameServer.URL)
+		mylog.Notify("トークン: %s", config.GameServer.Token)
+		mylog.Notify("ソルバイメージ: %s", config.Solver.Image)
+		mylog.Notify("\x1b[1m------------------------")
+
 	case "refresh":
 		mylog.Warning("試合情報を再取得します...(更新終了まで操作をしないでください)")
 		conf := config.GetConfigData()
