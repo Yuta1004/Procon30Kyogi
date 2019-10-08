@@ -55,7 +55,7 @@ func managerProcess(token string) {
 				newerBattle.ProcessErrCnt = 0
 				allBattleDict[battle.Info.ID] = newerBattle
 				outBattleLog(newerBattle)
-				if elapsedTurn <= newerBattle.Turn {
+				if elapsedTurn <= newerBattle.Info.MaxTurn {
 					go solver.ExecSolver(newerBattle.SolverCh, newerBattle)
 				}
 			}
