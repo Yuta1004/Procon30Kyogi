@@ -31,6 +31,8 @@ dist:
 	cp gen_solver_image.py dist
 	cp -r docs dist
 	cp -r solvers dist
+	cp -r viewer dist
+	rm -rf dist/viewer/__pycache__ dist/viewer/README.md dist/viewer/.git dist/viewer/.DS_Store
 
 clean:
-	rm -rf tmp/ procon30_yuge_kyogi_* .*.un*~
+	rm -rf tmp/ procon30_yuge_kyogi_* .*.un*~ dist/
