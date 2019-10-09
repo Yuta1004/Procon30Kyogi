@@ -11,6 +11,11 @@ import (
 
 var allBattleDict map[int]manager.Battle
 
+// GetBattleData : 管理中の試合情報を返す
+func GetBattleData() map[int]manager.Battle {
+	return allBattleDict
+}
+
 // BManagerExec : 名前の通り, 参加している試合全ての管理をする
 func BManagerExec(token string) {
 	// panic handling
