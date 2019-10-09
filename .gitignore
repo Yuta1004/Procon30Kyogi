@@ -4,6 +4,7 @@ solver.py
 tmp/
 dist/
 solvers/
+viewer/
 
 procon30_yuge_kyogi*
 procon-server*
