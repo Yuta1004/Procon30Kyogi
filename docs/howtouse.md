@@ -98,16 +98,28 @@ $ ./procon30_yuge_kyogi_darwin
 
 #### solver \<SolverImage\>
 
-使用するソルバイメージを変更
+使用するソルバイメージを変更 (`s`でも可)
 
 #### viewer \<BattleID\>
 
-ビューワ起動
+ビューワ起動(`v`でも可)
+
+#### check
+
+サーバ接続 & トークン確認
+
+#### status
+
+試合状況表示
+
+#### config
+
+設定状況表示
 
 #### refresh
 
 試合情報再取得
 
-#### exit, q
+#### exit
 
-マスタ終了
+マスタ終了(`q`でも可)
