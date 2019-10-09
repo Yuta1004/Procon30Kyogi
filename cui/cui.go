@@ -77,6 +77,16 @@ func execCommand(command ...string) {
 		conf := config.GetConfigData()
 		connector.CheckToken(conf.GameServer.Token)
 
+	case "status":
+		mylog.Notify("\x1b[1m----- 現在の試合状況 ----")
+		for id, battle := range battle.GetBattleData() {
+			mylog.Notify(
+				"BattleID: %d, Turn: %d, MaxTurn: %d, MatchTo: %s",
+				id, battle.Turn, battle.Info.MaxTurn, battle.Info.MatchTo,
+			)
+		}
+		mylog.Notify("\x1b[1m-----------------------")
+
 	case "config":
 		config := config.GetConfigData()
 		mylog.Notify("\x1b[1m----- 現在の設定状況 -----")
