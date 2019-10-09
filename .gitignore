@@ -5,6 +5,7 @@ tmp/
 dist/
 solvers/
 viewer/
+!manager/viewer/
 
 procon30_yuge_kyogi*
 procon-server*
