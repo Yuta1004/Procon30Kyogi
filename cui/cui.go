@@ -4,8 +4,10 @@ import (
 	"github.com/Yuta1004/procon30-kyogi/config"
 	"github.com/Yuta1004/procon30-kyogi/connector"
 	"github.com/Yuta1004/procon30-kyogi/manager/battle"
+	"github.com/Yuta1004/procon30-kyogi/manager/viewer"
 	"github.com/Yuta1004/procon30-kyogi/mylog"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -44,7 +46,12 @@ func execCommand(command ...string) {
 			mylog.Warning("Usage : viewer <BattleID>")
 			return
 		}
+		battleID, err := strconv.Atoi(command[1])
+		if err != nil {
+			mylog.Error("無効な試合IDが指定されました -> BattleID : %s", command[1])
+		}
 		mylog.Notify("ビューワを起動します... -> BattleID : %s", command[1])
+		go viewer.ExecViewer(battleID)
 
 	case "solver":
 		if len(command) < 2 {
