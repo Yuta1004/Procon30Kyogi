@@ -41,7 +41,7 @@ func CUI() {
 
 func execCommand(command ...string) {
 	switch command[0] {
-	case "viewer":
+	case "viewer", "v":
 		if len(command) < 2 {
 			mylog.Warning("Usage : viewer <BattleID>")
 			return
@@ -53,7 +53,7 @@ func execCommand(command ...string) {
 		mylog.Notify("ビューワを起動します... -> BattleID : %s", command[1])
 		go viewer.ExecViewer(battleID)
 
-	case "solver":
+	case "solver", "s":
 		if len(command) < 2 {
 			mylog.Warning("Usage : solver <SolverImage>")
 			return
@@ -77,6 +77,16 @@ func execCommand(command ...string) {
 		conf := config.GetConfigData()
 		connector.CheckToken(conf.GameServer.Token)
 
+	case "status":
+		mylog.Notify("\x1b[1m----- 現在の試合状況 ----")
+		for id, battle := range battle.GetBattleData() {
+			mylog.Notify(
+				"BattleID: %d, Turn: %d, MaxTurn: %d, MatchTo: %s",
+				id, battle.Turn, battle.Info.MaxTurn, battle.Info.MatchTo,
+			)
+		}
+		mylog.Notify("\x1b[1m-----------------------")
+
 	case "config":
 		config := config.GetConfigData()
 		mylog.Notify("\x1b[1m----- 現在の設定状況 -----")
@@ -90,9 +100,7 @@ func execCommand(command ...string) {
 		conf := config.GetConfigData()
 		battle.MakeAllBattleDict(conf.GameServer.Token)
 
-	case "q":
-		fallthrough
-	case "exit":
+	case "exit", "q":
 		mylog.Info("システムを終了します...")
 		os.Exit(0)
 
