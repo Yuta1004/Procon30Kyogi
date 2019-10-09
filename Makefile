@@ -33,4 +33,4 @@ dist:
 	cp -r solvers dist
 
 clean:
-	rm -rf tmp/ procon30_yuge_kyogi_*
+	rm -rf tmp/ procon30_yuge_kyogi_* .*.un*~
