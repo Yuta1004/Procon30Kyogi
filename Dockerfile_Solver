@@ -1,7 +1,7 @@
 FROM alpine:procon30-solver-base
 
-ARG SOURCE_PY="solver.py"
-COPY $SOURCE_PY /tmp/solver.py
+ARG SOURCE_DIR="solver"
+COPY $SOURCE_DIR /tmp/
 
 RUN     echo "[INFO] Setup solver.py" && \
         cd /tmp && \

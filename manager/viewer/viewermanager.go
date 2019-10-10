@@ -11,7 +11,9 @@ import (
 // ExecViewer : ビューワ実行
 func ExecViewer(battleID int) {
 	// get data
-	token := config.GetConfigData().GameServer.Token
+	conf := config.GetConfigData()
+	serverURL := conf.GameServer.URL
+	token := conf.GameServer.Token
 	allBattleDict := battle.GetBattleData()
 	battle, ok := allBattleDict[battleID]
 	if !ok {
@@ -32,6 +34,7 @@ func ExecViewer(battleID int) {
 		strconv.Itoa(battle.Info.MaxTurn),
 		strconv.Itoa(battle.Info.TurnMillis),
 		strconv.Itoa(battle.Info.IntervalMillis),
+		serverURL,
 	)
 	if err := cmd.Start(); err != nil {
 		mylog.Error("ビューワの起動に失敗しました")
