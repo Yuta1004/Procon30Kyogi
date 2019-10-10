@@ -18,15 +18,14 @@ def make_base_image():
 ## solver_path : ソルバプログラムのパス
 def make_solver_image(solver_path):
     # Format : ./~~/~~/solver_ver1.0.py
-    check_path(solver_path)
+    check_path("./solvers/"+solver_path)
     img_name = solver_path.split("/")[-1]                   # ファイル名
-    img_name = img_name.replace(".py", "").split("_")[-1]   # バージョン
     img_name = img_name.replace(".", "")                     # .を消す
     img_name = "procon30-solver:" + img_name
 
     try:
         subprocess.run(["make", "docker-build-solver",
-                       "SOURCE_PY="+str(solver_path), "SOLVER_IMAGE="+str(img_name)])
+                       "SOURCE_DIR=./solvers/"+str(solver_path), "SOLVER_IMAGE="+str(img_name)])
     except subprocess.CalledProcessError:
         error("ソルバイメージ作成に失敗しました")
         error("プログラムを終了します")
@@ -35,8 +34,10 @@ def make_solver_image(solver_path):
 
 # ソルバプログラム一覧を取得する
 def get_solver_list():
-    check_path("solvers/")
-    return glob.glob("./solvers/*/solver_*.py")
+    check_path("./solvers/")
+    files = os.listdir("./solvers/")
+    files_dir = [f for f in files if os.path.isdir(os.path.join("./solvers/", f))]
+    return files_dir
 
 
 # パスが存在するか確かめる
