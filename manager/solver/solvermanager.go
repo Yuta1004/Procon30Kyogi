@@ -26,7 +26,7 @@ func ExecSolver(ch chan string, battle manager.Battle) {
 
 	// config
 	conf := config.GetConfigData()
-	image := conf.Solver.Image
+	image := conf.Solver.Get(battle.Info.ID)
 
 	// config(container)
 	/* TODO : 適切なメモリ量割り当て */
@@ -62,7 +62,7 @@ func ExecSolver(ch chan string, battle manager.Battle) {
 		},
 	}
 
-	mylog.Info("ソルバを起動します -> BattleID: %d", battleID)
+	mylog.Info("ソルバを起動します -> BattleID: %d, SolverImage: %s", battleID, image)
 	ch <- callContainer(&confCont, &confHost, "Procon30_"+jsonFName)
 	return
 }
