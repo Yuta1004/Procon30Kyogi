@@ -49,19 +49,25 @@ func execCommand(command ...string) {
 		battleID, err := strconv.Atoi(command[1])
 		if err != nil {
 			mylog.Error("無効な試合IDが指定されました -> BattleID : %s", command[1])
+			return
 		}
 		mylog.Notify("ビューワを起動します... -> BattleID : %s", command[1])
 		go viewer.ExecViewer(battleID)
 
 	case "solver", "s":
-		if len(command) < 2 {
-			mylog.Warning("Usage : solver <SolverImage>")
+		if len(command) < 3 {
+			mylog.Warning("Usage : solver <BattleID> <SolverVersion>")
+			return
+		}
+		battleID, err := strconv.Atoi(command[1])
+		if err != nil {
+			mylog.Error("無効な試合IDが指定されました")
 			return
 		}
 		conf := config.GetConfigData()
-		conf.Solver.Image = command[1]
+		conf.Solver.Set(battleID, "procon30-solver:Ver"+command[2])
 		config.SetConfigData(*conf)
-		mylog.Notify("使用するソルバイメージを変更しました -> %s", command[1])
+		mylog.Notify("使用するソルバイメージを変更しました -> BattleID: %s, SolverImage: procon30-solver:Ver%s", command[1], command[2])
 
 	case "token":
 		if len(command) < 2 {
@@ -92,7 +98,11 @@ func execCommand(command ...string) {
 		mylog.Notify("\x1b[1m----- 現在の設定状況 -----")
 		mylog.Notify("ゲームサーバURL: %s", config.GameServer.URL)
 		mylog.Notify("トークン: %s", config.GameServer.Token)
-		mylog.Notify("ソルバイメージ: %s", config.Solver.Image)
+		mylog.Notify("ソルバイメージ(デフォルト): %s", config.Solver.Image)
+		mylog.Notify("ソルバイメージ(各試合ごと)")
+		for key, val := range config.Solver.ManualSet {
+			mylog.Notify("    - BattleID: %d, SolverImage: %s", key, val)
+		}
 		mylog.Notify("\x1b[1m------------------------")
 
 	case "refresh":

@@ -9,27 +9,11 @@ var (
 	config Config
 )
 
-// Config : 設定情報を扱う構造体
-type Config struct {
-	GameServer GameServer
-	Solver     Solver
-}
-
-// GameServer : 設定情報(GameServer)を扱う構造体
-type GameServer struct {
-	URL   string
-	Token string
-}
-
-// Solver : 設定情報(Solver)を扱う構造体
-type Solver struct {
-	Image string
-}
-
 // GetConfigData : 設定情報を返す
 func GetConfigData() *Config {
 	if config.GameServer.URL == "" {
 		_, err := toml.DecodeFile("config.toml", &config)
+		config.Solver.ManualSet = make(map[int]string)
 		if err != nil {
 			mylog.Error("設定ファイルの読み込み中にエラーが発生しました")
 			mylog.Error(err.Error())
@@ -42,4 +26,7 @@ func GetConfigData() *Config {
 // SetConfigData : 設定情報を新しくセットする
 func SetConfigData(conf Config) {
 	config = conf
+	if config.Solver.ManualSet == nil {
+		config.Solver.ManualSet = make(map[int]string)
+	}
 }
