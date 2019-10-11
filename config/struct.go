@@ -15,5 +15,5 @@ type GameServer struct {
 // Solver : 設定情報(Solver)を扱う構造体
 type Solver struct {
 	Image     string         // デフォルト(ファイルから読む)
-	manualSet map[int]string // 試合IDごとにもつ
+	ManualSet map[int]string // 試合IDごとにもつ
 }
