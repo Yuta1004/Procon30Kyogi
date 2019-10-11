@@ -55,13 +55,13 @@ func execCommand(command ...string) {
 
 	case "solver", "s":
 		if len(command) < 2 {
-			mylog.Warning("Usage : solver <SolverImage>")
+			mylog.Warning("Usage : solver <SolverVersion>")
 			return
 		}
 		conf := config.GetConfigData()
-		conf.Solver.Image = command[1]
+		conf.Solver.Image = "procon30-solver:Ver" + command[1]
 		config.SetConfigData(*conf)
-		mylog.Notify("使用するソルバイメージを変更しました -> %s", command[1])
+		mylog.Notify("使用するソルバイメージを変更しました -> procon30-solver:Ver%s", command[1])
 
 	case "token":
 		if len(command) < 2 {
