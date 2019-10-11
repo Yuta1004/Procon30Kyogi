@@ -98,7 +98,11 @@ func execCommand(command ...string) {
 		mylog.Notify("\x1b[1m----- 現在の設定状況 -----")
 		mylog.Notify("ゲームサーバURL: %s", config.GameServer.URL)
 		mylog.Notify("トークン: %s", config.GameServer.Token)
-		mylog.Notify("ソルバイメージ: %s", config.Solver.Image)
+		mylog.Notify("ソルバイメージ(デフォルト): %s", config.Solver.Image)
+		mylog.Notify("ソルバイメージ(各試合ごと)")
+		for key, val := range config.Solver.ManualSet {
+			mylog.Notify("    - BattleID: %d, SolverImage: %s", key, val)
+		}
 		mylog.Notify("\x1b[1m------------------------")
 
 	case "refresh":
