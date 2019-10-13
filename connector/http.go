@@ -3,6 +3,7 @@ package connector
 import (
 	"bytes"
 	"github.com/Yuta1004/procon30-kyogi/mylog"
+	"io"
 	"io/ioutil"
 	"net/http"
 )
@@ -20,7 +21,10 @@ func httpGet(url string, token string) []byte {
 		mylog.Error(err.Error())
 		return make([]byte, 0)
 	}
-	defer res.Body.Close()
+	defer func() {
+		io.Copy(ioutil.Discard, res.Body)
+		res.Body.Close()
+	}()
 
 	// read data
 	resBody, err := ioutil.ReadAll(res.Body)
@@ -46,5 +50,9 @@ func httpPostJSON(url string, token string, data string) bool {
 		mylog.Error(err.Error())
 		return false
 	}
+	defer func() {
+		io.Copy(ioutil.Discard, resp.Body)
+		resp.Body.Close()
+	}()
 	return resp.StatusCode/100 == 2
 }
