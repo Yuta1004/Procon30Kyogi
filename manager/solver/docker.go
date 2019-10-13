@@ -18,6 +18,7 @@ func callContainer(confCont *container.Config, confHost *container.HostConfig, n
 		mylog.Error(err.Error())
 		return "{}"
 	}
+	defer client.Close()
 
 	// create
 	ctx := context.Background()
@@ -54,6 +55,7 @@ func callContainer(confCont *container.Config, confHost *container.HostConfig, n
 		mylog.Error(err.Error())
 		return "{}"
 	}
+	defer out.Close()
 	result, _ := ioutil.ReadAll(out)
 	return string(result)
 }
