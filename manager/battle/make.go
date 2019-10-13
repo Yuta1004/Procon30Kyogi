@@ -21,6 +21,7 @@ func MakeAllBattleDict(token string) {
 	for _, battleInfo := range *battleInfoList {
 		battle := makeBattleStruct(token, battleInfo.ID)
 		battle.Info = battleInfo
+		battle.Turn = -9999999
 		allBattleDict[battleInfo.ID] = battle
 		mylog.Info("試合管理を始めます -> BattleID: %d", battle.Info.ID)
 	}
