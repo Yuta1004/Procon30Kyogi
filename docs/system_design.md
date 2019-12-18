@@ -1,42 +1,48 @@
-# SystemDesign
+# 高専プロコン競技@弓削 マスタ設計書
 
-## システム全体図
+## 目次
+
+1. システム全体図
+2. CUI
+3. BattleManager
+4. SolverManager
+5. ServerConnector
+
+## 1. システム全体図
+```
++--------------+            +-----------------+           +-----------------+
+|              |    run     |                 |   data    |                 |
+|     main     |----------->|  BattleManager  |<--------->|  SolverManager  |
+|              |            |                 |           |                 |
++--------------+            +-----------------+           +-----------------+
+       |                             ^                           |   ^
+       |                             |                           |   |
+       | run                         |                      run  |   | data
+       |                             |                           |   |
+       v                             |                           v   |
++--------------+                     |                    +-----------------+
+|              |         data        |                    |                 |
+|     CUI      |<--------------------+                    |      Solver     |
+|              |                                          |                 |
++--------------+                                          +-----------------+
+       ^
+       |
+       | control & view
+       |
+       v
+      User
 
 ```
 
-+-----------------+          +-----------------+          +--------------------+
-|       CUI       |          |  BattleManager  |          |  ServerConnector   |
-|                 | <----->  |                 | <----->  |                    |
-|    コマンド受付   |          |     試合管理     |          | ゲームサーバと通信する |
-+-----------------+          +-----------------+          +--------------------+
-                                      ^
-                                      |
-                                      v
-                             +-----------------+
-                             |  SolverManager  |
-                             |                 |
-                             |    ソルバ管理     |
-                             +-----------------+
-                                      ^
-                                      |
-                                [Docker API]
-                                      |
-                                      v
-                             +-----------------+
-                             |      Docker     |
-                             |                 |
-                             |     ソルバ実行    |
-                             +-----------------+
+<div style="page-break-before:always"></div>
 
-```
-
-## CUI
+## 2. CUI
 
 - コマンド受付
 - システム起動時に呼ばれる
 - チャネルを生成し、BattleManagerをgoroutineで起動する
 
-## BattleManager
+## 3. BattleManager
 
 - 試合状況を全て管理する
 - グローバル変数 `battleList` を使って試合状態を保つ
@@ -56,14 +62,16 @@ type Battle struct {
 }
 ```
 
-## SolverManager
+<div style="page-break-before:always"></div>
+
+## 4. SolverManager
 
 - BattleManagerにgoroutineで呼ばれる
 - 試合状況を判断し、適切なリソース割り当てを行う (優先度低)
 - Solver実行終了後はチャネルを通してBattleManagerへ結果を返す
 - Solver実行時間の管理も行う
 
-## ServerConnector
+## 5. ServerConnector
 
 - ゲームサーバと通信する
 - ゲームデータ受信, 行動情報送信を行う
